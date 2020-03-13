@@ -11,7 +11,7 @@ workbook = Workbook()
 sheet = workbook.active
 
 #telebot.logger.setLevel(logging.DEBUG)
-API_TOKEN = 'token'
+API_TOKEN = '982978878:AAHvuiscqu8sCKrlCW_VC3w-5WZHW6nHzds'
 """
 large_text = open("large_text.txt", "rb").read()
 splitted_text = util.split_string(large_text, 3000)
