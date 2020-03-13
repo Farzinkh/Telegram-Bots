@@ -3,6 +3,8 @@ import ast
 import logging
 import time
 import copy
+import os
+from flask import Flask, request
 from telegram.ext import Updater
 from telebot import types,util
 from random import seed,randint
@@ -11,13 +13,10 @@ workbook = Workbook()
 sheet = workbook.active
 
 #telebot.logger.setLevel(logging.DEBUG)
-API_TOKEN = 'token'
-"""
-large_text = open("large_text.txt", "rb").read()
-splitted_text = util.split_string(large_text, 3000)
-for text in splitted_text:
-	bot.send_message(message.chat.id, text)
-"""
+API_TOKEN = os.getenv("API_TOKEN")
+APPNAME=os.environ.get("APPNAME")
+WEBHOOK_LISTEN = '0.0.0.0'
+server = Flask(__name__)
 global answerlist,questionsdoc,questionlist
 lines=open('questions.txt','r').readlines()
 count,countans,answerlist,questionsdoc,questionlist=0,5,[],{},[]
@@ -230,3 +229,14 @@ while True:
 		bot.polling(none_stop=True, interval=0, timeout=0)
 	except:
 	    time.sleep(0.2)
+@server.route('/' + API_TOKEN, methods=['POST'])
+def getMessage():
+    bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
+    return "!", 200
+@server.route("/")
+def webhook():
+    bot.remove_webhook()
+    bot.set_webhook(url="https://{}.herokuapp.com/{}".format(APPNAME,API_TOKEN))
+    return "!", 200
+if __name__ == "__main__":
+    server.run(host=WEBHOOK_LISTEN, port=int(os.environ.get("PORT", "8443")))

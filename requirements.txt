@@ -1,3 +1,4 @@
 python-telegram-bot==12.4.2
 pyTelegramBotAPI==3.6.7
 openpyxl==3.0.3
+flask==1.1.1
