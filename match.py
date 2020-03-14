@@ -111,7 +111,7 @@ def handle_query(call):
         bot.answer_callback_query(callback_query_id=call.id,
                               show_alert=True,
                               text="You Clicked " + valueFromCallBack + " and your choice is " + keyFromCallBack)
-        bot.edit_message_text(chat_id=call.message,
+        bot.edit_message_text(chat_id=call.message.chat.id,
                               text="ok now for next question send next command \n /next",
                               message_id=call.message.message_id,
                               reply_markup=None,
