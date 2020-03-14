@@ -74,7 +74,7 @@ def beginner(message):
 			sighuplist[message.from_user.username]['timer']=time.time()
 			handle_command_adminwindow(message)
 	else:
-		bot.reply_to(message, 'sighup please \n /start \n /begin')
+		bot.reply_to(message, 'signup please \n /start \n /begin')
 
 @bot.message_handler(commands=['next'])
 def handle_command_adminwindow(message):
@@ -131,7 +131,10 @@ def sighup(message):
 			sighuplist[message.from_user.username]['stringList']=makequestion(message)
 	elif  message.content_type=='text':
 		if message.text=='My point':
-			bot.reply_to(message, "your point is :{}".format(sighuplist[message.from_user.username]['point']))
+			try:
+				raise bot.reply_to(message, "your point is :{}".format(sighuplist[message.from_user.username]['point']))
+			except:
+				pass
 		elif message.text=='billboard':
 			bot.send_message(message.chat.id, billboard(message))
 		elif message.text=='home':
@@ -144,10 +147,10 @@ def sighup(message):
 				bot.reply_to(message, "Good {} enter your lastname:".format(message.text))
 			elif sighuplist[message.from_user.username]['lastname']=='':
 				sighuplist[message.from_user.username]['lastname']=message.text
-				bot.reply_to(message, "Well done {} {} your sighup is complete".format(sighuplist[message.from_user.username]['firstname'],sighuplist[message.from_user.username]['lastname']))
-				bot.send_message(message.chat.id, "Please choice from  this options", reply_markup=markup)
+				bot.reply_to(message, "Well done {} {} your signup is complete".format(sighuplist[message.from_user.username]['firstname'],sighuplist[message.from_user.username]['lastname']))
+				bot.send_message(message.chat.id, "Please choose from  this options", reply_markup=markup)
 			else:
-				bot.send_message(message.chat.id, "Please choice from  this options", reply_markup=markup)
+				bot.send_message(message.chat.id, "Please choose from  this options", reply_markup=markup)
 	else:
 		bot.reply_to(message, "wrong input!!!")
 
@@ -205,7 +208,7 @@ def billboard(message):
 def send_welcome(message):
 	bot.reply_to(message,'hi {} Welcome to home we have examination hear'.format(message.from_user.first_name))
 	if sighuplist.get(message.from_user.username)!=None:
-		bot.send_message(message.chat.id, "Please choice from  this options", reply_markup=markup)
+		bot.send_message(message.chat.id, "Please choose from  this options", reply_markup=markup)
 		pass
 	else:
 		bot.reply_to(message, "Enter your phone number:", reply_markup=mksighup)
@@ -213,7 +216,7 @@ def send_welcome(message):
 @bot.message_handler(func=sighup)
 def startmatch(message):
 	if sighuplist[message.from_user.username]['firstname'] !='':
-		bot.reply_to(message, "Please choice from options", reply_markup=markup)
+		bot.reply_to(message, "Please choose from options", reply_markup=markup)
 
 @bot.message_handler(content_types=['document', 'audio'])
 def handle_docs_audio(message):
