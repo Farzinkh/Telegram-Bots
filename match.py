@@ -1,21 +1,18 @@
 import telebot
 import ast
 import logging
-import time
 import copy
 import os
 from flask import Flask, request
 from telegram.ext import Updater
 from telebot import types,util
 from random import seed,randint
-from openpyxl import Workbook,load_workbook
+from openpyxl import Workbook
 workbook = Workbook()
-sheet = workbook.active
-
-#telebot.logger.setLevel(logging.DEBUG)
-API_TOKEN = os.getenv("API_TOKEN")
-APPNAME=os.environ.get("APPNAME")
-WEBHOOK_LISTEN = '0.0.0.0'
+sheet = workbook.active #for working on xlsx file
+#telebot.logger.setLevel(logging.DEBUG) #for debugging telegram api
+API_TOKEN = os.getenv("API_TOKEN") #this value will set localy on your host and will obtain from botfather
+WEBHOOK_LISTEN = '0.0.0.0' #default
 server = Flask(__name__)
 global answerlist,questionsdoc,questionlist
 lines=open('questions.txt','r').readlines()
@@ -27,11 +24,11 @@ while count<len(lines):
 	questionlist.append(lines[count].rstrip("\n"))
 	questionsdoc[lines[count].rstrip("\n")]=[lines[count+1].rstrip("\n"),lines[count+2].rstrip("\n"),lines[count+3].rstrip("\n"),lines[count+4].rstrip("\n")]
 	count+=6
-bot = telebot.TeleBot(API_TOKEN)
 seed(1)
 crossIcon = u"\u274C"
 flag= u"\u2690"
-#bot=telebot.AsyncTeleBot(API_TOKEN)
+bot = telebot.TeleBot(API_TOKEN)
+#bot=telebot.AsyncTeleBot(API_TOKEN) #if you want your bot respond asynchronus
 markup = types.ReplyKeyboardMarkup()
 itembtn1 = types.KeyboardButton('My point')
 itembtn2 = types.KeyboardButton('Fight on')
@@ -47,6 +44,7 @@ sighuplist,champions,first,second,third={},['','',''],0,0,0
 def makestringlist(a,b,c,d):
 	stringdata = {u"\u2160":a , u"\u2161": b, u"\u2162": c,u"\u2163":d}
 	return stringdata
+
 def makeKeyboard(stringList):
     markup2 = types.InlineKeyboardMarkup()
     for key, value in stringList.items():
@@ -55,11 +53,13 @@ def makeKeyboard(stringList):
         markup2.add(types.InlineKeyboardButton(text=key,
                                               callback_data="['value', '" + value + "', '" + key + "']"))
     return markup2
+
 @bot.message_handler(commands=['end'])
 def surrend(message):
 	root=sighuplist[message.from_user.username]
 	root['state']='finish'
 	bot.send_message(message.chat.id, 'oh my friend {} it was so hard for you,i khow'.format(message.from_user.first_name))
+
 @bot.message_handler(commands=['begin'])
 def beginner(message):
 	if message.from_user.username in sighuplist.keys():
@@ -74,6 +74,7 @@ def beginner(message):
 			handle_command_adminwindow(message)
 	else:
 		bot.send_message(message.chat.id, 'sighup please \n /start \n /begin')
+
 @bot.message_handler(commands=['next'])
 def handle_command_adminwindow(message):
 	if message.from_user.username in sighuplist.keys():
@@ -91,6 +92,7 @@ def handle_command_adminwindow(message):
 			sighuplist[message.from_user.username]['timer']=time.time()
 	else:
 		bot.send_message(message.chat.id, 'sighup and begin match please \n /start')
+
 @bot.callback_query_handler(func=lambda call: True)
 def handle_query(call):
     global answerlist,questionsdoc,questionlist
@@ -114,6 +116,7 @@ def handle_query(call):
                               reply_markup=None,
                               parse_mode='HTML')
         nextquestion(call)
+
 def sighup(message):
 	if message.reply_to_message != None:
 		if message.text=='flow':
@@ -149,6 +152,7 @@ def sighup(message):
 	else:
 		bot.send_message(message.chat.id, "wrong input!!!")
 		return None
+
 def getquestion(message):
 	global answerlist,questionsdoc,questionlist
 	s=questionlist[sighuplist[message.from_user.username]['questionnumbers'][-1]]
@@ -156,12 +160,14 @@ def getquestion(message):
 	for text in util.split_string('{}\n{}\n{}\n{}\n{}'.format(s,u"\u2160"+":"+g[0],u"\u2161"+":"+g[1],u"\u2162"+":"+g[2],u"\u2163"+":"+g[3]), 3000):
 		bot.send_message(chat_id=message.chat.id,text=text,reply_markup=makeKeyboard(sighuplist[message.from_user.username]['stringList']),parse_mode='HTML')
 	return None
+
 def makequestion(message):
 	global answerlist,questionsdoc,questionlist
 	n=randint(0,len(questionlist))
 	sighuplist[message.from_user.username]['questionnumbers'].append(n)
 	q=questionsdoc[questionlist[n]]
 	return makestringlist(q[0],q[1],q[2],q[3])
+
 def nextquestion(call):
 	global answerlist,questionsdoc,questionlist
 	number=randint(0,len(questionlist)-1)
@@ -171,6 +177,7 @@ def nextquestion(call):
 	sighuplist[call.message.chat.username]['questionnumbers'].append(number)
 	x=questionsdoc[questionlist[number]]
 	sighuplist[call.message.chat.username]['stringList']=makestringlist(x[0],x[1],x[2],x[3])
+
 def billboard(message):
 	global first,second,third,champions
 	for i in sighuplist.keys():
@@ -196,6 +203,7 @@ def billboard(message):
 	except:
 		return '{}\n{}'.format(champions[0],champions[1])
 	return '{}\n{}\n{}'.format(champions[0],champions[1],champions[2])
+
 @bot.message_handler(commands=['help', 'start'])
 def send_welcome(message):
 	bot.reply_to(message,'hi {} Welcome to home we have examination hear'.format(message.from_user.first_name))
@@ -203,14 +211,16 @@ def send_welcome(message):
 		pass
 	else:
 		bot.send_message(message.chat.id, "Enter your phone number:", reply_markup=mksighup)
-# Handle all other messages with content_type 'text' (content_types defaults to ['text'])
+
 @bot.message_handler(func=sighup)
 def startmatch(message):
 	if sighuplist[message.from_user.username]['firstname'] !='':
 		bot.send_message(message.chat.id, "Please choice from options", reply_markup=markup)
+
 @bot.message_handler(content_types=['document', 'audio'])
 def handle_docs_audio(message):
 	pass
+
 @bot.message_handler(commands=['alpha'])
 def output(message):
 	bot.send_message(message.chat.id, "Hi mr/mis {} you are in alpha office enter password to receive results".format(message.from_user.first_name),reply_markup=mksighup)
@@ -224,19 +234,17 @@ def output(message):
 		sheet["f{}".format(row)]=sighuplist[i]['state']
 		row+=1
 	workbook.save(filename="output.xlsx")
-while True:
-	try:
-		bot.polling(none_stop=True, interval=0, timeout=0)
-	except:
-	    time.sleep(0.2)
+
 @server.route('/' + API_TOKEN, methods=['POST'])
 def getMessage():
     bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
     return "!", 200
+
 @server.route("/")
 def webhook():
     bot.remove_webhook()
-    bot.set_webhook(url="https://{}.herokuapp.com/{}".format(APPNAME,API_TOKEN))
+    bot.set_webhook(url="https://serene-hollows-85911.herokuapp.com/{}".format(API_TOKEN)) #this will create by heroku create command
     return "!", 200
+	
 if __name__ == "__main__":
     server.run(host=WEBHOOK_LISTEN, port=int(os.environ.get("PORT", "8443")))
