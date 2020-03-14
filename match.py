@@ -112,7 +112,6 @@ def handle_query(call):
                           reply_markup=None,
                           parse_mode='HTML')
     nextquestion(call)
-
 def sighup(message):
 	if message.reply_to_message != None:
 		if message.text=='flow':
