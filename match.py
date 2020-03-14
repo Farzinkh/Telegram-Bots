@@ -243,8 +243,8 @@ def getMessage():
 @server.route("/")
 def webhook():
     bot.remove_webhook()
-    bot.set_webhook(url="https://serene-hollows-85911.herokuapp.com/{}".format(API_TOKEN)) #this will create by heroku create command
+    bot.set_webhook(url="https://civilmatch.herokuapp.com/{}".format(API_TOKEN)) #this will create by heroku create command
     return "!", 200
-	
+
 if __name__ == "__main__":
     server.run(host=WEBHOOK_LISTEN, port=int(os.environ.get("PORT", "8443")))
