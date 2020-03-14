@@ -122,11 +122,11 @@ def sighup(message):
 	if message.reply_to_message != None:
 		if message.text=='flow':
 			doc = open('output.xlsx', 'rb')
-			bot.send_document(message, doc)
+			bot.send_document(message.chat.id, doc)
 		elif  len(message.text) != 11:
 			msg = bot.reply_to(message, 'wrong input please input your phone number correctly: \n ex:09xxxxxxxxx',reply_markup=mksighup)
 		else:
-			bot.reply_to(message, " Ok now enter your first name :")
+			bot.send_message(message.chat.id, " Ok now enter your first name :")
 			sighuplist[message.from_user.username]={'match':'on','firstname':'','lastname':'','phonenumber':message.text,'questionnumbers':[],'stringList':'stringList','state':'alive','point':0,'questionnum':0,'timer':time.time(),'chat_id':message.chat.id}
 			sighuplist[message.from_user.username]['stringList']=makequestion(message)
 	elif  message.content_type=='text':
