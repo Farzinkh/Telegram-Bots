@@ -81,8 +81,8 @@ def handle_command_adminwindow(message):
 	if message.from_user.username in sighuplist.keys():
 		sighuplist[message.from_user.username]['questionnum']+=1
 		if sighuplist[message.from_user.username]['questionnum'] ==20 or sighuplist[message.from_user.username]['questionnum']>20 :
-			bot.reply_to(message,u'\u2302'+'congratulation you have answered to all question\nand your point is :{}'.format(sighuplist[message.from_user.username]['point']))
-			bot.reply_to(message, u"\u26Fe"+" just take rest and relax", reply_markup=markup)
+			bot.send_message(message.chat.id,u'\u2302'+'congratulation you have answered to all question\nand your point is :{}'.format(sighuplist[message.from_user.username]['point']))
+			bot.send_message(message.chat.id, u"\u26Fe"+" just take rest and relax", reply_markup=markup)
 			sighuplist[message.from_user.username]['state']='finish'
 		elif (time.time()-sighuplist[message.from_user.username]['timer'])==45 or (time.time()-sighuplist[message.from_user.username]['timer'])>45:
 			bot.reply_to(message,'your time is finished!!!')
@@ -133,11 +133,11 @@ def sighup(message):
 		if message.text=='My point':
 			bot.reply_to(message, "your point is :{}".format(sighuplist[message.from_user.username]['point']))
 		elif message.text=='billboard':
-			bot.reply_to(message, billboard(message))
+			bot.send_message(message.chat.id, billboard(message))
 		elif message.text=='home':
 			send_welcome(message)
 		elif message.text=='Fight on':
-			bot.reply_to(message, "Alright you have only 15 sec for each question , 10 question and only one chance \n this are your commands\nfor surrendering /end \nfor next question /next \nfor begining /begin ")
+			bot.send_message(message.chat.id, "Alright you have only 15 sec for each question , 10 question and only one chance \n this are your commands\nfor surrendering /end \nfor next question /next \nfor begining /begin ")
 		else:
 			if sighuplist[message.from_user.username]['firstname'] =='':
 				sighuplist[message.from_user.username]['firstname']=message.text
@@ -145,9 +145,9 @@ def sighup(message):
 			elif sighuplist[message.from_user.username]['lastname']=='':
 				sighuplist[message.from_user.username]['lastname']=message.text
 				bot.reply_to(message, "Well done {} {} your sighup is complete".format(sighuplist[message.from_user.username]['firstname'],sighuplist[message.from_user.username]['lastname']))
-				bot.reply_to(message, "Please choice from  this options", reply_markup=markup)
+				bot.send_message(message.chat.id, "Please choice from  this options", reply_markup=markup)
 			else:
-				bot.reply_to(message, "Please choice from  this options", reply_markup=markup)
+				bot.send_message(message.chat.id, "Please choice from  this options", reply_markup=markup)
 	else:
 		bot.reply_to(message, "wrong input!!!")
 
@@ -205,6 +205,7 @@ def billboard(message):
 def send_welcome(message):
 	bot.reply_to(message,'hi {} Welcome to home we have examination hear'.format(message.from_user.first_name))
 	if sighuplist.get(message.from_user.username)!=None:
+		bot.send_message(message.chat.id, "Please choice from  this options", reply_markup=markup)
 		pass
 	else:
 		bot.reply_to(message, "Enter your phone number:", reply_markup=mksighup)
