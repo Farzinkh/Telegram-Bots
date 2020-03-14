@@ -58,40 +58,40 @@ def makeKeyboard(stringList):
 def surrend(message):
 	root=sighuplist[message.from_user.username]
 	root['state']='finish'
-	bot.send_message(message.chat.id, 'oh my friend {} it was so hard for you,i khow'.format(message.from_user.first_name))
+	bot.reply_to(message.chat.id, 'oh my friend {} it was so hard for you,i khow'.format(message.from_user.first_name))
 
 @bot.message_handler(commands=['begin'])
 def beginner(message):
 	if message.from_user.username in sighuplist.keys():
 		if sighuplist[message.from_user.username]['state']=='finish' :
-			bot.send_message(message.chat.id, 'sorry you lose your chance !!!')
+			bot.reply_to(message.chat.id, 'sorry you lose your chance !!!')
 		elif sighuplist[message.from_user.username]['state']=='on match':
-			bot.send_message(message.chat.id,'you are in match right now!')
+			bot.reply_to(message.chat.id,'you are in match right now!')
 			handle_command_adminwindow(message)
 		elif sighuplist[message.from_user.username]['state']=='alive':
 			sighuplist[message.from_user.username]['state']='on match'
 			sighuplist[message.from_user.username]['timer']=time.time()
 			handle_command_adminwindow(message)
 	else:
-		bot.send_message(message.chat.id, 'sighup please \n /start \n /begin')
+		bot.reply_to(message.chat.id, 'sighup please \n /start \n /begin')
 
 @bot.message_handler(commands=['next'])
 def handle_command_adminwindow(message):
 	if message.from_user.username in sighuplist.keys():
 		sighuplist[message.from_user.username]['questionnum']+=1
 		if sighuplist[message.from_user.username]['questionnum'] ==20 or sighuplist[message.from_user.username]['questionnum']>20 :
-			bot.send_message(message.chat.id,u'\u2302'+'congratulation you have answered to all question\nand your point is :{}'.format(sighuplist[message.from_user.username]['point']))
-			bot.send_message(message.chat.id, u"\u26Fe"+" just take rest and relax", reply_markup=markup)
+			bot.reply_to(message.chat.id,u'\u2302'+'congratulation you have answered to all question\nand your point is :{}'.format(sighuplist[message.from_user.username]['point']))
+			bot.reply_to(message.chat.id, u"\u26Fe"+" just take rest and relax", reply_markup=markup)
 			sighuplist[message.from_user.username]['state']='finish'
 		elif (time.time()-sighuplist[message.from_user.username]['timer'])==45 or (time.time()-sighuplist[message.from_user.username]['timer'])>45:
-			bot.send_message(message.chat.id,'your time is finished!!!')
+			bot.reply_to(message.chat.id,'your time is finished!!!')
 			getquestion(message)
 			sighuplist[message.from_user.username]['timer']=time.time()
 		else:
 			getquestion(message)
 			sighuplist[message.from_user.username]['timer']=time.time()
 	else:
-		bot.send_message(message.chat.id, 'sighup and begin match please \n /start')
+		bot.reply_to(message.chat.id, 'sighup and begin match please \n /start')
 
 @bot.callback_query_handler(func=lambda call: True)
 def handle_query(call):
@@ -123,39 +123,39 @@ def sighup(message):
 			doc = open('output.xlsx', 'rb')
 			bot.send_document(message.chat.id, doc)
 		elif  len(message.text) != 11:
-			msg = bot.send_message(message.chat.id, 'wrong input please input your phone number correctly: \n ex:09xxxxxxxxx',reply_markup=mksighup)
+			msg = bot.reply_to(message.chat.id, 'wrong input please input your phone number correctly: \n ex:09xxxxxxxxx',reply_markup=mksighup)
 		else:
-			bot.send_message(message.chat.id, " Ok now enter your first name :")
+			bot.reply_to(message.chat.id, " Ok now enter your first name :")
 			sighuplist[message.from_user.username]={'match':'on','firstname':'','lastname':'','phonenumber':message.text,'questionnumbers':[],'stringList':'stringList','state':'alive','point':0,'questionnum':0,'timer':time.time(),'chat_id':message.chat.id}
 			sighuplist[message.from_user.username]['stringList']=makequestion(message)
 	elif  message.content_type=='text':
 		if message.text=='My point':
-			bot.send_message(message.chat.id, "your point is :{}".format(sighuplist[message.from_user.username]['point']))
+			bot.reply_to(message.chat.id, "your point is :{}".format(sighuplist[message.from_user.username]['point']))
 		elif message.text=='billboard':
-			bot.send_message(message.chat.id, billboard(message))
+			bot.reply_to(message.chat.id, billboard(message))
 		elif message.text=='home':
 			send_welcome(message)
 		elif message.text=='Fight on':
-			bot.send_message(message.chat.id, "Alright you have only 15 sec for each question , 10 question and only one chance \n this are your commands\nfor surrendering /end \nfor next question /next \nfor begining /begin ")
+			bot.reply_to(message.chat.id, "Alright you have only 15 sec for each question , 10 question and only one chance \n this are your commands\nfor surrendering /end \nfor next question /next \nfor begining /begin ")
 		else:
 			if sighuplist[message.from_user.username]['firstname'] =='':
 				sighuplist[message.from_user.username]['firstname']=message.text
-				bot.send_message(message.chat.id, "Good {} enter your lastname:".format(message.text))
+				bot.reply_to(message.chat.id, "Good {} enter your lastname:".format(message.text))
 			elif sighuplist[message.from_user.username]['lastname']=='':
 				sighuplist[message.from_user.username]['lastname']=message.text
-				bot.send_message(message.chat.id, "Well done {} {} your sighup is complete".format(sighuplist[message.from_user.username]['firstname'],sighuplist[message.from_user.username]['lastname']))
-				bot.send_message(message.chat.id, "Please choice from  this options", reply_markup=markup)
+				bot.reply_to(message.chat.id, "Well done {} {} your sighup is complete".format(sighuplist[message.from_user.username]['firstname'],sighuplist[message.from_user.username]['lastname']))
+				bot.reply_to(message.chat.id, "Please choice from  this options", reply_markup=markup)
 			else:
-				bot.send_message(message.chat.id, "Please choice from  this options", reply_markup=markup)
+				bot.reply_to(message.chat.id, "Please choice from  this options", reply_markup=markup)
 	else:
-		bot.send_message(message.chat.id, "wrong input!!!")
+		bot.reply_to(message.chat.id, "wrong input!!!")
 
 def getquestion(message):
 	global answerlist,questionsdoc,questionlist
 	s=questionlist[sighuplist[message.from_user.username]['questionnumbers'][-1]]
 	g=questionsdoc[s]
 	for text in util.split_string('{}\n{}\n{}\n{}\n{}'.format(s,u"\u2160"+":"+g[0],u"\u2161"+":"+g[1],u"\u2162"+":"+g[2],u"\u2163"+":"+g[3]), 3000):
-		bot.send_message(chat_id=message.chat.id,text=text,reply_markup=makeKeyboard(sighuplist[message.from_user.username]['stringList']),parse_mode='HTML')
+		bot.reply_to(chat_id=message.chat.id,text=text,reply_markup=makeKeyboard(sighuplist[message.from_user.username]['stringList']),parse_mode='HTML')
 
 def makequestion(message):
 	global answerlist,questionsdoc,questionlist
@@ -206,12 +206,12 @@ def send_welcome(message):
 	if sighuplist.get(message.from_user.username)!=None:
 		pass
 	else:
-		bot.send_message(message.chat.id, "Enter your phone number:", reply_markup=mksighup)
+		bot.reply_to(message.chat.id, "Enter your phone number:", reply_markup=mksighup)
 
 @bot.message_handler(func=sighup)
 def startmatch(message):
 	if sighuplist[message.from_user.username]['firstname'] !='':
-		bot.send_message(message.chat.id, "Please choice from options", reply_markup=markup)
+		bot.reply_to(message.chat.id, "Please choice from options", reply_markup=markup)
 
 @bot.message_handler(content_types=['document', 'audio'])
 def handle_docs_audio(message):
@@ -219,7 +219,7 @@ def handle_docs_audio(message):
 
 @bot.message_handler(commands=['alpha'])
 def output(message):
-	bot.send_message(message.chat.id, "Hi mr/mis {} you are in alpha office enter password to receive results".format(message.from_user.first_name),reply_markup=mksighup)
+	bot.reply_to(message.chat.id, "Hi mr/mis {} you are in alpha office enter password to receive results".format(message.from_user.first_name),reply_markup=mksighup)
 	row=1
 	for i in sighuplist:
 		sheet["A{}".format(row)]=i
