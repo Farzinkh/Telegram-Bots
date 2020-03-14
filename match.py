@@ -128,7 +128,6 @@ def sighup(message):
 			bot.send_message(message.chat.id, " Ok now enter your first name :")
 			sighuplist[message.from_user.username]={'match':'on','firstname':'','lastname':'','phonenumber':message.text,'questionnumbers':[],'stringList':'stringList','state':'alive','point':0,'questionnum':0,'timer':time.time(),'chat_id':message.chat.id}
 			sighuplist[message.from_user.username]['stringList']=makequestion(message)
-			return True
 	elif  message.content_type=='text':
 		if message.text=='My point':
 			bot.send_message(message.chat.id, "your point is :{}".format(sighuplist[message.from_user.username]['point']))
@@ -148,10 +147,8 @@ def sighup(message):
 				bot.send_message(message.chat.id, "Please choice from  this options", reply_markup=markup)
 			else:
 				bot.send_message(message.chat.id, "Please choice from  this options", reply_markup=markup)
-			return None
 	else:
 		bot.send_message(message.chat.id, "wrong input!!!")
-		return None
 
 def getquestion(message):
 	global answerlist,questionsdoc,questionlist
@@ -159,7 +156,6 @@ def getquestion(message):
 	g=questionsdoc[s]
 	for text in util.split_string('{}\n{}\n{}\n{}\n{}'.format(s,u"\u2160"+":"+g[0],u"\u2161"+":"+g[1],u"\u2162"+":"+g[2],u"\u2163"+":"+g[3]), 3000):
 		bot.send_message(chat_id=message.chat.id,text=text,reply_markup=makeKeyboard(sighuplist[message.from_user.username]['stringList']),parse_mode='HTML')
-	return None
 
 def makequestion(message):
 	global answerlist,questionsdoc,questionlist
