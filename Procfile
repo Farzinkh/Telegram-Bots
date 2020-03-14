@@ -1,1 +1,1 @@
-web:python3 match.py
+web:python match.py
