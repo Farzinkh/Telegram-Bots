@@ -81,18 +81,14 @@ def handle_command_adminwindow(message):
 	if message.from_user.username in sighuplist.keys():
 		sighuplist[message.from_user.username]['questionnum']+=1
 		if sighuplist[message.from_user.username]['questionnum'] ==20 or sighuplist[message.from_user.username]['questionnum']>20 :
-			bot.send_message(message.chat.id,u'\u2302'+'congratulation you have answered to all question\nand your point is :{}'.format(sighuplist[message.from_user.username]['point']))
+			bot.send_message(message.chat.id,u'\u2302'+'congratulation you have answered to all questions\nand your point is :{}'.format(sighuplist[message.from_user.username]['point']))
 			bot.send_message(message.chat.id, u"\u26Fe"+" just take rest and relax", reply_markup=markup)
 			sighuplist[message.from_user.username]['state']='finish'
-		elif (time.time()-sighuplist[message.from_user.username]['timer'])==45 or (time.time()-sighuplist[message.from_user.username]['timer'])>45:
-			bot.reply_to(message,'your time is finished!!!')
-			getquestion(message)
-			sighuplist[message.from_user.username]['timer']=time.time()
 		else:
 			getquestion(message)
 			sighuplist[message.from_user.username]['timer']=time.time()
 	else:
-		bot.reply_to(message, 'sighup and begin match please \n /start')
+		bot.reply_to(message, 'signup and begin match please \n /start')
 
 @bot.callback_query_handler(func=lambda call: True)
 def handle_query(call):
@@ -100,23 +96,22 @@ def handle_query(call):
     if (call.data.startswith("['value'")):
         valueFromCallBack = ast.literal_eval(call.data)[1]
         keyFromCallBack = ast.literal_eval(call.data)[2]
-        print(sighuplist[call.message.chat.username]['questionnumbers'][-1])
-        print(questionlist[sighuplist[call.message.chat.username]['questionnumbers'][-1]])
-        print(len(valueFromCallBack))
-        if len(valueFromCallBack)==20 :
-          if valueFromCallBack==questionsdoc[questionlist[sighuplist[call.message.chat.username]['questionnumbers'][-1]]][answerlist[sighuplist[call.message.chat.username]['questionnumbers'][-1]]-1][0:20]:
-             sighuplist[call.message.chat.username]['point']+=20
-        if valueFromCallBack==questionsdoc[questionlist[sighuplist[call.message.chat.username]['questionnumbers'][-1]]][answerlist[sighuplist[call.message.chat.username]['questionnumbers'][-1]]-1]:
+    if (time.time()-sighuplist[call.message.chat.username]['timer'])==45 or (time.time()-sighuplist[call.message.chat.username]['timer'])>45:
+        bot.send_message(call.message.chat.id,'your time is finished!!!')
+    elif len(valueFromCallBack)==20 :
+        if valueFromCallBack==questionsdoc[questionlist[sighuplist[call.message.chat.username]['questionnumbers'][-1]]][answerlist[sighuplist[call.message.chat.username]['questionnumbers'][-1]]-1][0:20]:
            sighuplist[call.message.chat.username]['point']+=20
-        bot.answer_callback_query(callback_query_id=call.id,
-                              show_alert=True,
-                              text="You Clicked " + valueFromCallBack + " and your choice is " + keyFromCallBack)
-        bot.edit_message_text(chat_id=call.message.chat.id,
-                              text="ok now for next question send next command \n /next",
-                              message_id=call.message.message_id,
-                              reply_markup=None,
-                              parse_mode='HTML')
-        nextquestion(call)
+    elif valueFromCallBack==questionsdoc[questionlist[sighuplist[call.message.chat.username]['questionnumbers'][-1]]][answerlist[sighuplist[call.message.chat.username]['questionnumbers'][-1]]-1]:
+        sighuplist[call.message.chat.username]['point']+=20
+    bot.answer_callback_query(callback_query_id=call.id,
+                          show_alert=True,
+                          text="You Clicked " + valueFromCallBack + " and your choice is " + keyFromCallBack)
+    bot.edit_message_text(chat_id=call.message.chat.id,
+                          text="ok now for next question send next command \n /next",
+                          message_id=call.message.message_id,
+                          reply_markup=None,
+                          parse_mode='HTML')
+    nextquestion(call)
 
 def sighup(message):
 	if message.reply_to_message != None:
@@ -158,7 +153,7 @@ def getquestion(message):
 	global answerlist,questionsdoc,questionlist
 	s=questionlist[sighuplist[message.from_user.username]['questionnumbers'][-1]]
 	g=questionsdoc[s]
-	for text in util.split_string('{}\n{}\n{}\n{}\n{}'.format(s,u"\u2160"+":"+g[0],u"\u2161"+":"+g[1],u"\u2162"+":"+g[2],u"\u2163"+":"+g[3]), 3000):
+	for text in util.split_string('{}\n{}\n{}\n{}\n{}'.format(str(sighuplist[message.from_user.username]['questionnum'])+':'+s,u"\u2160"+":"+g[0],u"\u2161"+":"+g[1],u"\u2162"+":"+g[2],u"\u2163"+":"+g[3]), 3000):
 		bot.reply_to(message,text=text,reply_markup=makeKeyboard(sighuplist[message.from_user.username]['stringList']),parse_mode='HTML')
 
 def makequestion(message):
