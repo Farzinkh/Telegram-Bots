@@ -207,13 +207,15 @@ def billboard(message):
 
 @bot.message_handler(commands=['help', 'start'])
 def send_welcome(message):
-	bot.reply_to(message,'hi {} Welcome to home we have examination hear'.format(message.from_user.first_name))
-	if sighuplist.get(message.from_user.username)!=None:
-		bot.send_message(message.chat.id, "Please choose from  this options", reply_markup=markup)
+	try:
+		bot.reply_to(message,'hi {} Welcome to home we have examination hear'.format(message.from_user.first_name))
+		if sighuplist.get(message.from_user.username)!=None:
+			bot.send_message(message.chat.id, "Please choose from  this options", reply_markup=markup)
+			pass
+		else:
+			bot.reply_to(message, "Enter your phone number:", reply_markup=mksighup)
+	except:
 		pass
-	else:
-		bot.reply_to(message, "Enter your phone number:", reply_markup=mksighup)
-
 @bot.message_handler(func=sighup)
 def startmatch(message):
 	if sighuplist[message.from_user.username]['firstname'] !='':
@@ -225,7 +227,10 @@ def handle_docs_audio(message):
 
 @bot.message_handler(commands=['alpha'])
 def output(message):
-	bot.reply_to(message, "Hi mr/mis {} you are in alpha office enter password to receive results".format(message.from_user.first_name),reply_markup=mksighup)
+	try:
+		bot.reply_to(message, "Hi mr/mis {} you are in alpha office enter password to receive results".format(message.from_user.first_name),reply_markup=mksighup)
+	except:
+		pass
 	row=1
 	for i in sighuplist:
 		sheet["A{}".format(row)]=i
