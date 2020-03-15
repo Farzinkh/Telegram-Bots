@@ -200,11 +200,13 @@ def billboard(message):
 @bot.message_handler(commands=['help', 'start'])
 def send_welcome(message):
 	try:
-		bot.reply_to(message,'hi {} Welcome to home we have examination hear'.format(message.from_user.first_name))
-		if sighuplist.get(message.from_user.username)!=None:
+		if message.from_user.username==None:
+			bot.send_message(message.chat.id,"hmmm it seems like that you dont have username account so go to telegram setting and set one to continue!")
+		elif sighuplist.get(message.from_user.username)!=None:
+			bot.reply_to(message,'hi {} Welcome to home we have examination hear'.format(message.from_user.first_name))
 			bot.send_message(message.chat.id, "Please choose from  this options", reply_markup=markup)
-			pass
 		else:
+			bot.reply_to(message,'hi {} Welcome to home we have examination hear'.format(message.from_user.first_name))
 			bot.reply_to(message, "Enter your phone number:", reply_markup=mksighup)
 	except:
 		pass
