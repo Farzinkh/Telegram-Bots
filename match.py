@@ -59,7 +59,7 @@ def makeKeyboard(stringList):
 def surrend(message):
 	try:
 		sighuplist[message.from_user.username]['state']='finish'
-		bot.reply_to(message, 'oh my friend {} it was so hard for you,i khow'.format(message.from_user.first_name))
+		bot.reply_to(message, 'oh my friend {} it was so hard for you,i know'.format(message.from_user.first_name))
 	except:
 		pass
 @bot.message_handler(commands=['begin'])
@@ -137,7 +137,7 @@ def sighup(message):
 			elif message.text=='home':
 				send_welcome(message)
 			elif message.text=='Fight on':
-				bot.send_message(message.chat.id, "Alright you have only 15 sec for each question , 10 question and only one chance \n this are your commands\nfor surrendering /end \nfor next question /next \nfor begining /begin ")
+				bot.send_message(message.chat.id, "Alright you have only 15 sec for each question , 20 question and only one chance \n this are your commands\nfor surrendering /end \nfor next question /next \nfor begining /begin ")
 			else:
 				try:
 					if sighuplist[message.from_user.username]['firstname'] =='':
@@ -186,24 +186,15 @@ def billboard(message):
 		if sighuplist[i]['point']==first or sighuplist[i]['point']>first:
 			first=sighuplist[i]['point']
 			champions[0]='{} : {}'.format(i,sighuplist[i]['point'])
-	bill=copy.deepcopy(sighuplist)
-	try:
-		del bill[i]
-		for i in bill.keys():
-			if bill[i]['point']==second or bill[i]['point']>second:
-				second=bill[i]['point']
-				champions[1]='{} : {}'.format(i,bill[i]['point'])
-	except:
-		return '{}'.format(champions[0])
-	try:
-		bill2=copy.deepcopy(bill)
-		del bill2[i]
-		for i in bill2.keys():
-			if bill2[i]['point']==third or bill2[i]['point']>third:
-				third=bill2[i]['point']
-				champions[2]='{} : {}'.format(i,bill2[i]['point'])
-	except:
-		return '{}\n{}'.format(champions[0],champions[1])
+			pass
+		if sighuplist[i]['point']==second or sighuplist[i]['point']>second:
+			second=sighuplist[i]['point']
+			champions[1]='{} : {}'.format(i,sighuplist[i]['point'])
+			pass
+		if	sighuplist[i]['point']==third or sighuplist[i]['point']>third:
+			third=sighuplist[i]['point']
+			champions[2]='{} : {}'.format(i,sighuplist[i]['point'])
+			pass
 	return '{}\n{}\n{}'.format(champions[0],champions[1],champions[2])
 
 @bot.message_handler(commands=['help', 'start'])
@@ -229,8 +220,10 @@ def handle_docs_audio(message):
 @bot.message_handler(commands=['alpha'])
 def output(message):
 	try:
+		print(message.from_user.first_name," is in alpha office")
 		bot.reply_to(message, "Hi mr/mis {} you are in alpha office enter password to receive results".format(message.from_user.first_name),reply_markup=mksighup)
 	except:
+		print(message.from_user.first_name," have a problem in alpha office")
 		pass
 	row=1
 	for i in sighuplist:
