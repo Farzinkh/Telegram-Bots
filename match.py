@@ -57,9 +57,11 @@ def makeKeyboard(stringList):
 
 @bot.message_handler(commands=['end'])
 def surrend(message):
-	sighuplist[message.from_user.username]['state']='finish'
-	bot.reply_to(message, 'oh my friend {} it was so hard for you,i khow'.format(message.from_user.first_name))
-
+	try:
+		sighuplist[message.from_user.username]['state']='finish'
+		bot.reply_to(message, 'oh my friend {} it was so hard for you,i khow'.format(message.from_user.first_name))
+	except:
+		pass
 @bot.message_handler(commands=['begin'])
 def beginner(message):
 	if message.from_user.username in sighuplist.keys():
