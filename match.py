@@ -37,7 +37,7 @@ def sql_insert(data):
 def sql_update(key,data,username):
 	global db,identifylist
 	courobj=db.cursor()
-	courobj.execute("UPDATE merrymaker SET {}={} where id={}".format(key,data,identifylist[username]))
+	courobj.execute("UPDATE merrymaker SET {}={} where ID={}".format(key,data,identifylist[username]))
 	db.commit()
 global db,idnum,identifylist
 db=sql_connection()
