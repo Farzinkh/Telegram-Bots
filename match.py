@@ -112,7 +112,7 @@ def handle_query(call):
                           reply_markup=None,
                           parse_mode='HTML')
     nextquestion(call)
-	
+
 def sighup(message):
 	if message.reply_to_message != None:
 		if message.text=='flow':
@@ -125,30 +125,30 @@ def sighup(message):
 			sighuplist[message.from_user.username]={'match':'on','firstname':'','lastname':'','phonenumber':message.text,'questionnumbers':[],'stringList':'stringList','state':'alive','point':0,'questionnum':0,'timer':time.time(),'chat_id':message.chat.id}
 			sighuplist[message.from_user.username]['stringList']=makequestion(message)
 	elif  message.content_type=='text':
-		if message.text=='My point':
-			try:
-				raise bot.reply_to(message, "your point is :{}".format(sighuplist[message.from_user.username]['point']))
-			except:
-				pass
-		elif message.text=='billboard':
-			bot.send_message(message.chat.id, billboard(message))
-		elif message.text=='home':
-			send_welcome(message)
-		elif message.text=='Fight on':
-			bot.send_message(message.chat.id, "Alright you have only 15 sec for each question , 10 question and only one chance \n this are your commands\nfor surrendering /end \nfor next question /next \nfor begining /begin ")
-		else:
-			try:
-				if sighuplist[message.from_user.username]['firstname'] =='':
-					sighuplist[message.from_user.username]['firstname']=message.text
-					bot.reply_to(message, "Good {} enter your lastname:".format(message.text))
-				elif sighuplist[message.from_user.username]['lastname']=='':
-					sighuplist[message.from_user.username]['lastname']=message.text
-					bot.reply_to(message, "Well done {} {} your signup is complete".format(sighuplist[message.from_user.username]['firstname'],sighuplist[message.from_user.username]['lastname']))
-					bot.send_message(message.chat.id, "Please choose from  this options", reply_markup=markup)
-				else:
-					bot.send_message(message.chat.id, "Please choose from  this options", reply_markup=markup)
-			except:
-					bot.reply_to(message, 'signup please \n /start')
+		try:
+			if message.text=='My point':
+			 	bot.reply_to(message, "your point is :{}".format(sighuplist[message.from_user.username]['point']))
+			elif message.text=='billboard':
+				bot.send_message(message.chat.id, billboard(message))
+			elif message.text=='home':
+				send_welcome(message)
+			elif message.text=='Fight on':
+				bot.send_message(message.chat.id, "Alright you have only 15 sec for each question , 10 question and only one chance \n this are your commands\nfor surrendering /end \nfor next question /next \nfor begining /begin ")
+			else:
+				try:
+					if sighuplist[message.from_user.username]['firstname'] =='':
+						sighuplist[message.from_user.username]['firstname']=message.text
+						bot.reply_to(message, "Good {} enter your lastname:".format(message.text))
+					elif sighuplist[message.from_user.username]['lastname']=='':
+						sighuplist[message.from_user.username]['lastname']=message.text
+						bot.reply_to(message, "Well done {} {} your signup is complete".format(sighuplist[message.from_user.username]['firstname'],sighuplist[message.from_user.username]['lastname']))
+						bot.send_message(message.chat.id, "Please choose from  this options", reply_markup=markup)
+					else:
+						bot.send_message(message.chat.id, "Please choose from  this options", reply_markup=markup)
+				except:
+						bot.reply_to(message, 'signup please \n /start')
+		except:
+			pass
 	else:
 		bot.reply_to(message, "wrong input!!!")
 
