@@ -186,15 +186,15 @@ def billboard(message):
 		if sighuplist[i]['point']==first or sighuplist[i]['point']>first:
 			first=sighuplist[i]['point']
 			champions[0]='{} : {}'.format(i,sighuplist[i]['point'])
-			pass
+			continue
 		if sighuplist[i]['point']==second or sighuplist[i]['point']>second:
 			second=sighuplist[i]['point']
 			champions[1]='{} : {}'.format(i,sighuplist[i]['point'])
-			pass
+			continue
 		if	sighuplist[i]['point']==third or sighuplist[i]['point']>third:
 			third=sighuplist[i]['point']
 			champions[2]='{} : {}'.format(i,sighuplist[i]['point'])
-			pass
+			continue
 	return '{}\n{}\n{}'.format(champions[0],champions[1],champions[2])
 
 @bot.message_handler(commands=['help', 'start'])
