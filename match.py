@@ -4,6 +4,8 @@ import logging
 import copy
 import os
 import time
+import sqlite3
+from sqlite3 import Error
 from flask import Flask, request
 from telegram.ext import Updater
 from telebot import types,util
@@ -15,6 +17,32 @@ sheet = workbook.active #for working on xlsx file
 API_TOKEN = os.getenv("API_TOKEN")#this value will set localy on your host and will obtain from botfather
 WEBHOOK_LISTEN = '0.0.0.0' #default
 server = Flask(__name__)
+def sql_connection():
+	try:
+		con=sqlite3.connect('mydatabase.db')
+		print("connection is established ,database created")
+		return con
+	except Error:
+		print(Error)
+def sql_table():
+	global db
+	courobj=db.cursor()
+	courobj.execute("CREATE TABLE merrymaker(username text,firstname text,lastname text,phonenumber real,point real,state text)")
+	db.commit()
+def sql_insert(data):
+	global db
+	courobj=db.cursor()
+	courobj.execute("""INSERT INTO merrymaker(username,firstname,lastname,phonenumber,point,state) VALUES(?,?,?,?,?,?)""",data)
+	db.commit()
+def sql_update(key,data,username):
+	global db
+	courobj=db.cursor()
+	courobj.execute("UPDATE merrymaker SET {}={} where username={}".format(key,data,username))
+	db.commit()
+global db
+db=sql_connection()
+sql_table()
+
 global answerlist,questionsdoc,questionlist
 lines=open('questions.txt','r').readlines()
 count,countans,answerlist,questionsdoc,questionlist=0,5,[],{},[]
@@ -57,10 +85,12 @@ def makeKeyboard(stringList):
 
 @bot.message_handler(commands=['end'])
 def surrend(message):
-	root=sighuplist[message.from_user.username]
-	root['state']='finish'
-	bot.reply_to(message, 'oh my friend {} it was so hard for you,i khow'.format(message.from_user.first_name))
-
+	try:
+		sql_update('state','finish',message.from_user.username)
+		bot.reply_to(message, 'oh my friend {} it was so hard for you,i khow'.format(message.from_user.first_name))
+	except:
+		print("there is problem in database",message.from_user.username)
+		pass
 @bot.message_handler(commands=['begin'])
 def beginner(message):
 	if message.from_user.username in sighuplist.keys():
@@ -125,6 +155,8 @@ def sighup(message):
 				bot.send_message(message.chat.id, " Ok now enter your first name :")
 				sighuplist[message.from_user.username]={'match':'on','firstname':'','lastname':'','phonenumber':message.text,'questionnumbers':[],'stringList':'stringList','state':'alive','point':0,'questionnum':0,'timer':time.time(),'chat_id':message.chat.id}
 				sighuplist[message.from_user.username]['stringList']=makequestion(message)
+				z=(sighuplist[message.from_user.username],sighuplist[message.from_user.username]['firstname'],sighuplist[message.from_user.username]['lastname'],sighuplist[message.from_user.username]['phonenumber'],sighuplist[message.from_user.username]['point'],sighuplist[message.from_user.username]['state'])
+				sql_insert(z)
 		except:
 			pass
 	elif  message.content_type=='text':
