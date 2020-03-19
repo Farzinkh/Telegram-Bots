@@ -69,20 +69,6 @@ def beginner(message):
 	else:
 		bot.reply_to(message, 'signup please \n /start & /begin')
 
-@bot.message_handler(commands=['next'])
-def handle_command_adminwindow(message):
-	if message.from_user.username in sighuplist.keys():
-		sighuplist[message.from_user.username]['questionnum']+=1
-		if sighuplist[message.from_user.username]['questionnum'] ==20 or sighuplist[message.from_user.username]['questionnum']>20 :
-			bot.send_message(message.chat.id,u'\u2302'+'congratulation you have answered to all questions\nand your point is :{}'.format(sighuplist[message.from_user.username]['point']),reply_markup=markup3)
-			bot.send_message(message.chat.id, u"\u26Fe"+" just take rest and relax", reply_markup=markup)
-			sighuplist[message.from_user.username]['state']='finish'
-		else:
-			getquestion(message)
-			sighuplist[message.from_user.username]['timer']=time.time()
-	else:
-		bot.reply_to(message, 'signup and begin match please \n /start')
-
 def check(message,num):
     g=questionsdoc[questionlist[sighuplist[message.from_user.username]['questionnumbers'][-2]]][num]
     if (time.time()-sighuplist[message.chat.username]['timer'])==45 or (time.time()-sighuplist[message.chat.username]['timer'])>45:
@@ -113,23 +99,28 @@ def sighup(message):
                 send_welcome(message)
             elif message.text=='Fight on':
                 bot.send_message(message.chat.id, "Alright you have only 15 sec for each question , 20 question and only one chance \n this are your commands\nfor surrendering /end \nfor next question /next \nfor begining /begin ")
-            elif message.text==u"\u2160":
-                print(message)
-                check(message,0)
-                sighuplist[message.from_user.username]['timer']=time.time()
-                getquestion(message)
-            elif message.text==u"\u2161":
-                check(message,1)
-                sighuplist[message.from_user.username]['timer']=time.time()
-                getquestion(message)
-            elif message.text==u"\u2162":
-                check(message,2)
-                sighuplist[message.from_user.username]['timer']=time.time()
-                getquestion(message)
-            elif message.text==u"\u2163":
-                check(message,3)
-                sighuplist[message.from_user.username]['timer']=time.time()					
-                getquestion(message)
+            if message.from_user.username in sighuplist.keys():
+               sighuplist[message.from_user.username]['questionnum']+=1
+               if sighuplist[message.from_user.username]['questionnum'] ==20 or sighuplist[message.from_user.username]['questionnum']>20 :
+                  bot.send_message(message.chat.id,u'\u2302'+'congratulation you have answered to all questions\nand your point is :{}'.format(sighuplist[message.from_user.username]['point']),reply_markup=markup3)
+                  bot.send_message(message.chat.id, u"\u26Fe"+" just take rest and relax", reply_markup=markup)
+                  sighuplist[message.from_user.username]['state']='finish'
+               else:
+                 sighuplist[message.from_user.username]['timer']=time.time()
+                 if message.text==u"\u2160":
+                   check(message,0)
+                   getquestion(message)
+                 elif message.text==u"\u2161":
+                   check(message,1)
+                   getquestion(message)
+                 elif message.text==u"\u2162":
+                   check(message,2)
+                   getquestion(message)
+                 elif message.text==u"\u2163":
+                   check(message,3)
+                   getquestion(message)
+            else:
+                bot.reply_to(message, 'signup and begin match please \n /start')
             else:
                 try:
                     if sighuplist[message.from_user.username]['firstname'] =='':
