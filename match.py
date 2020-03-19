@@ -61,11 +61,11 @@ def beginner(message):
 			bot.reply_to(message, 'sorry you lose your chance !!!')
 		elif sighuplist[message.from_user.username]['state']=='on match':
 			bot.reply_to(message,'you are in match right now!')
-			handle_command_adminwindow(message)
+			getquestion(message)			
 		elif sighuplist[message.from_user.username]['state']=='alive':
 			sighuplist[message.from_user.username]['state']='on match'
 			sighuplist[message.from_user.username]['timer']=time.time()
-			handle_command_adminwindow(message)
+			getquestion(message)
 	else:
 		bot.reply_to(message, 'signup please \n /start & /begin')
 
