@@ -105,7 +105,7 @@ def sighup(message):
         except:
             pass
     elif  message.content_type=='text':
-        try:
+#        try:
             if message.text=='My point':
                 bot.reply_to(message, "your point is :{}".format(sighuplist[message.from_user.username]['point']))
             elif message.text=='billboard':
@@ -140,8 +140,8 @@ def sighup(message):
                         bot.send_message(message.chat.id, "Please choose from  this options", reply_markup=markup)
                 except:
                     bot.reply_to(message, 'signup please \n /start')
-        except:
-            pass
+#        except:
+#            pass
     else:
         bot.reply_to(message, "wrong input!!!")
 
