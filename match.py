@@ -89,7 +89,7 @@ def check(message,num):
         bot.send_message(message.chat.id,'your time is finished!!!')
     elif g==questionsdoc[questionlist[sighuplist[message.chat.username]['questionnumbers'][-2]]][answerlist[sighuplist[message.chat.username]['questionnumbers'][-2]]-1]:
         sighuplist[message.chat.username]['point']+=20
-    bot.send_message(message.chat.id, reply_markup=markup3)
+    bot.send_message(message.chat.id,text="ok now for next question send next command \n /next",reply_markup=markup3)
 
 def sighup(message):
     if message.reply_to_message != None:
