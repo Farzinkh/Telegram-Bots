@@ -107,7 +107,6 @@ def sighup(message):
                 bot.reply_to(message, "Well done {} {} your signup is complete".format(sighuplist[message.from_user.username]['firstname'],sighuplist[message.from_user.username]['lastname']))
                 bot.send_message(message.chat.id, "Please choose from  this options", reply_markup=markup)
             elif message.from_user.username in sighuplist.keys():
-               sighuplist[message.from_user.username]['questionnum']+=1
                if  sighuplist[message.from_user.username]['state']=='finish':
                   pass
                elif sighuplist[message.from_user.username]['questionnum'] ==20 or sighuplist[message.from_user.username]['questionnum']>20 :
@@ -116,6 +115,7 @@ def sighup(message):
                   sighuplist[message.from_user.username]['state']='finish'
                else:
                  sighuplist[message.from_user.username]['timer']=time.time()
+                 sighuplist[message.from_user.username]['questionnum']+=1
                  if message.text==u"\u2160":
                    check(message,0)
                    getquestion(message)
