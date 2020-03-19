@@ -108,7 +108,9 @@ def sighup(message):
                 bot.send_message(message.chat.id, "Please choose from  this options", reply_markup=markup)
             elif message.from_user.username in sighuplist.keys():
                sighuplist[message.from_user.username]['questionnum']+=1
-               if sighuplist[message.from_user.username]['questionnum'] ==20 or sighuplist[message.from_user.username]['questionnum']>20 :
+               if  sighuplist[message.from_user.username]['state']=='finish':
+                  pass
+               elif sighuplist[message.from_user.username]['questionnum'] ==20 or sighuplist[message.from_user.username]['questionnum']>20 :
                   bot.send_message(message.chat.id,u'\u2302'+'congratulation you have answered to all questions\nand your point is :{}'.format(sighuplist[message.from_user.username]['point']),reply_markup=markup3)
                   bot.send_message(message.chat.id, u"\u26Fe"+" just take rest and relax", reply_markup=markup)
                   sighuplist[message.from_user.username]['state']='finish'
@@ -166,7 +168,6 @@ def send_welcome(message):
 		if message.from_user.username==None:
 			bot.send_message(message.chat.id,"hmmm it seems like that you dont have username account so go to telegram setting and set one to continue!")
 		elif sighuplist.get(message.from_user.username)!=None:
-			bot.reply_to(message,'hi {} Welcome to home we have examination hear'.format(message.from_user.first_name))
 			bot.send_message(message.chat.id, "Please choose from  this options", reply_markup=markup)
 		else:
 			bot.reply_to(message,'hi {} Welcome to home we have examination hear'.format(message.from_user.first_name))
