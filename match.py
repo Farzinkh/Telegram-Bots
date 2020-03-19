@@ -89,7 +89,7 @@ def check(message,num):
         bot.send_message(message.chat.id,'your time is finished!!!')
     elif g==questionsdoc[questionlist[sighuplist[message.chat.username]['questionnumbers'][-2]]][answerlist[sighuplist[message.chat.username]['questionnumbers'][-2]]-1]:
         sighuplist[message.chat.username]['point']+=20
-    bot.send_message(chat_id, message, reply_markup=markup3)
+    bot.send_message(message.chat.id, reply_markup=markup3)
 
 def sighup(message):
     if message.reply_to_message != None:
@@ -118,13 +118,13 @@ def sighup(message):
                 print(message)
                 check(message,0)
                 getquestion(message)
-            elif message.text==u"\u2160":
+            elif message.text==u"\u2161":
                 check(message,1)
                 getquestion(message)
-            elif message.text==u"\u2160":
+            elif message.text==u"\u2162":
                 check(message,2)
                 getquestion(message)
-            elif message.text==u"\u2160":
+            elif message.text==u"\u2163":
                 check(message,3)
                 getquestion(message)
             else:
@@ -151,7 +151,7 @@ def getquestion(message):
     for text in util.split_string('{}\n{}\n{}\n{}\n{}'.format("".join([str(sighuplist[message.from_user.username]['questionnum']),':',s]),"".join([u"\u2160",":",g[0]]),"".join([u"\u2161",":",g[1]]),"".join([u"\u2162",":",g[2]]),"".join([u"\u2163",":",g[3]])), 3000):
         bot.send_message(message.chat.id,text=text,reply_markup=markup2)
     number=randint(0,len(questionlist)-1)
-    while number in sighuplist[call.message.chat.username]['questionnumbers']:
+    while number in sighuplist[message.chat.username]['questionnumbers']:
         number=randint(0,len(questionlist)-1)
         pass
     sighuplist[message.from_user.username]['questionnumbers'].append(number)
