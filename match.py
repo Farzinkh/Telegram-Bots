@@ -41,10 +41,10 @@ itembtn1 = types.KeyboardButton(u"\u2160")
 itembtn2 = types.KeyboardButton(u"\u2161")
 itembtn3 = types.KeyboardButton(u"\u2162")
 itembtn4 = types.KeyboardButton(u"\u2163")
-markup.row(itembtn1)
-markup.row(itembtn2)
-markup.row(itembtn3)
-markup.add(itembtn4)
+markup2.row(itembtn1)
+markup2.row(itembtn2)
+markup2.row(itembtn3)
+markup2.add(itembtn4)
 sighuplist={}
 markup3 = types.ReplyKeyboardRemove(selective=False)
 @bot.message_handler(commands=['end'])
@@ -148,7 +148,7 @@ def sighup(message):
 def getquestion(message):
     s=questionlist[sighuplist[message.from_user.username]['questionnumbers'][-1]]
     g=questionsdoc[s]
-    for text in util.split_string('{}\n{}\n{}\n{}\n{}'.format("".join(str(sighuplist[message.from_user.username]['questionnum']),':',s),"".join(u"\u2160",":",g[0]),"".join(u"\u2161",":",g[1]),"".join(u"\u2162",":",g[2]),"".join(u"\u2163",":",g[3])), 3000):
+    for text in util.split_string('{}\n{}\n{}\n{}\n{}'.format("".join([str(sighuplist[message.from_user.username]['questionnum']),':',s]),"".join([u"\u2160",":",g[0]]),"".join([u"\u2161",":",g[1]]),"".join([u"\u2162",":",g[2]]),"".join([u"\u2163",":",g[3]])), 3000):
         bot.send_message(message.chat.id,text=text,reply_markup=markup2)
     number=randint(0,len(questionlist)-1)
     while number in sighuplist[call.message.chat.username]['questionnumbers']:
