@@ -120,8 +120,6 @@ def sighup(message):
                    check(message,3)
                    getquestion(message)
             else:
-                bot.reply_to(message, 'signup and begin match please \n /start')
-            else:
                 try:
                     if sighuplist[message.from_user.username]['firstname'] =='':
                         sighuplist[message.from_user.username]['firstname']=message.text
