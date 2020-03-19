@@ -36,7 +36,7 @@ markup.row(itembtn2)
 markup.row(itembtn3)
 markup.add(itembtn4)
 mksighup = types.ForceReply(selective=False)
-markup2=types.ReplyKeyboardMarkup()
+markup2=types.ReplyKeyboardMarkup( one_time_keyboard=True)
 itembtn1 = types.KeyboardButton(u"\u2160")
 itembtn2 = types.KeyboardButton(u"\u2161")
 itembtn3 = types.KeyboardButton(u"\u2162")
@@ -46,7 +46,6 @@ markup2.row(itembtn2)
 markup2.row(itembtn3)
 markup2.add(itembtn4)
 sighuplist={}
-markup3 = types.ReplyKeyboardRemove(selective=False)
 @bot.message_handler(commands=['end'])
 def surrend(message):
 	try:
@@ -89,7 +88,6 @@ def check(message,num):
         bot.send_message(message.chat.id,'your time is finished!!!')
     elif g==questionsdoc[questionlist[sighuplist[message.chat.username]['questionnumbers'][-2]]][answerlist[sighuplist[message.chat.username]['questionnumbers'][-2]]-1]:
         sighuplist[message.chat.username]['point']+=20
-    bot.send_message(message.chat.id,text="ok now for next question send next command \n /next",reply_markup=markup3)
 
 def sighup(message):
     if message.reply_to_message != None:
