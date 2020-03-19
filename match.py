@@ -36,7 +36,7 @@ markup.row(itembtn2)
 markup.row(itembtn3)
 markup.add(itembtn4)
 mksighup = types.ForceReply(selective=False)
-markup2=types.ReplyKeyboardMarkup( one_time_keyboard=True)
+markup2=types.ReplyKeyboardMarkup()
 itembtn1 = types.KeyboardButton(u"\u2160")
 itembtn2 = types.KeyboardButton(u"\u2161")
 itembtn3 = types.KeyboardButton(u"\u2162")
@@ -46,11 +46,12 @@ markup2.row(itembtn2)
 markup2.row(itembtn3)
 markup2.add(itembtn4)
 sighuplist={}
+markup3 = types.ReplyKeyboardRemove(selective=False)
 @bot.message_handler(commands=['end'])
 def surrend(message):
 	try:
 		sighuplist[message.from_user.username]['state']='finish'
-		bot.reply_to(message, 'oh my friend {} it was so hard for you,i know'.format(message.from_user.first_name))
+		bot.reply_to(message, 'oh my friend {} it was so hard for you,i know'.format(message.from_user.first_name),reply_markup=markup3)
 	except:
 		pass
 @bot.message_handler(commands=['begin'])
@@ -73,7 +74,7 @@ def handle_command_adminwindow(message):
 	if message.from_user.username in sighuplist.keys():
 		sighuplist[message.from_user.username]['questionnum']+=1
 		if sighuplist[message.from_user.username]['questionnum'] ==20 or sighuplist[message.from_user.username]['questionnum']>20 :
-			bot.send_message(message.chat.id,u'\u2302'+'congratulation you have answered to all questions\nand your point is :{}'.format(sighuplist[message.from_user.username]['point']))
+			bot.send_message(message.chat.id,u'\u2302'+'congratulation you have answered to all questions\nand your point is :{}'.format(sighuplist[message.from_user.username]['point']),reply_markup=markup3)
 			bot.send_message(message.chat.id, u"\u26Fe"+" just take rest and relax", reply_markup=markup)
 			sighuplist[message.from_user.username]['state']='finish'
 		else:
@@ -115,15 +116,19 @@ def sighup(message):
             elif message.text==u"\u2160":
                 print(message)
                 check(message,0)
+                sighuplist[message.from_user.username]['timer']=time.time()
                 getquestion(message)
             elif message.text==u"\u2161":
                 check(message,1)
+                sighuplist[message.from_user.username]['timer']=time.time()
                 getquestion(message)
             elif message.text==u"\u2162":
                 check(message,2)
+                sighuplist[message.from_user.username]['timer']=time.time()
                 getquestion(message)
             elif message.text==u"\u2163":
                 check(message,3)
+                sighuplist[message.from_user.username]['timer']=time.time()					
                 getquestion(message)
             else:
                 try:
