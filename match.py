@@ -24,6 +24,7 @@ while count<len(lines):
 	count+=6
 seed(1)
 crossIcon = u"\u274C"
+champions,first,second,third=['','',''],0,0,0
 bot = telebot.TeleBot(API_TOKEN,threaded=True,num_threads=10)
 #bot=telebot.AsyncTeleBot(API_TOKEN) #if you want your bot respond asynchronus
 markup = types.ReplyKeyboardMarkup()
@@ -94,7 +95,7 @@ def sighup(message):
             if message.text=='My point':
                 bot.reply_to(message, "your point is :{}".format(sighuplist[message.from_user.username]['point']))
             elif message.text=='billboard':
-                bot.send_message(message.chat.id, billboard(message))
+                bot.send_message(message.chat.id, billboard(message,champions,first,second,third))
             elif message.text=='home':
                 send_welcome(message)
             elif message.text=='Fight on':
@@ -144,8 +145,7 @@ def getquestion(message):
     sighuplist[message.from_user.username]['questionnumbers'].append(number)
     return None
 
-def billboard(message):
-	champions,first,second,third=['','',''],0,0,0
+def billboard(message,champions,first,second,third):
 	for i in sighuplist.keys():
 		if sighuplist[i]['point']==first or sighuplist[i]['point']>first:
 			first=sighuplist[i]['point']
