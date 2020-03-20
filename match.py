@@ -166,9 +166,9 @@ def billboard(message):
 				third=sighuplist[i]['point']
 				champions[2]='{} : {}'.format(i,sighuplist[i]['point'])
 				continue
-	finally:
 		return '{}\n{}\n{}'.format(champions[0],champions[1],champions[2])
-
+	except:
+		pass
 @bot.message_handler(commands=['help', 'start'])
 def send_welcome(message):
 	try:
