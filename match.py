@@ -3,6 +3,7 @@ import ast
 import logging
 import os
 import time
+import sqlite3
 from flask import Flask, request
 from telebot import types,util
 from random import seed,randint
@@ -15,6 +16,7 @@ WEBHOOK_LISTEN = '0.0.0.0' #default
 server = Flask(__name__)
 lines=open('questions.txt','r').readlines()
 count,countans,answerlist,questionsdoc,questionlist=0,5,[],{},[]
+connection = sqlite3.connect('userDetails.db',check_same_thread=False)
 while countans<len(lines):
 	answerlist.append(int(lines[countans].rstrip("\n")))
 	countans+=6
@@ -46,12 +48,38 @@ markup2.row(itembtn2)
 markup2.row(itembtn3)
 markup2.add(itembtn4)
 sighuplist={}
-markup3 = types.ReplyKeyboardRemove(selective=False)
+def database(user_id,chat_id,questionnum,phone_number,username,firstname,lastname,point,state):
+    connection.execute('''CREATE TABLE IF NOT EXISTS userdetails(user_id int,chat_id int,questionnum int,phone_number int,username text,firstname text,lastname text,point int,state text)''')
+    connection.execute("INSERT INTO userdetails VALUES (?,?,?,?,?,?,?,?,?)",(user_id,chat_id,questionnum,phone_number,username,firstname,lastname,point,state))
+    connection.commit()
+def savedb(message):
+	DATA =sighuplist[message.from_user.username]
+	user_id=DATA['user_id']
+	chat_id=DATA['chat_id']
+	questionnum=DATA['questionnum']
+	phone_number=DATA['phone_number']
+	username=DATA['username']
+	firstname=DATA['firstname']
+	lastname=DATA['lastname']
+	point=DATA['point']
+	state=DATA['state']
+	database(user_id,chat_id,questionnum,phone_number,username,firstname,lastname,point,state)
+
+def Updatedb(task):
+    sql = ''' UPDATE tasks
+              SET questionnum = ? ,
+                  point = ? ,
+                  state = ?,
+              WHERE id = ?'''
+    cur = connection.cursor()
+    cur.execute(sql, task)
+    connection.commit()
+
 @bot.message_handler(commands=['end'])
 def surrend(message):
 	try:
 		sighuplist[message.from_user.username]['state']='finish'
-		bot.reply_to(message, 'oh my friend {} it was so hard for you,i know'.format(message.from_user.first_name),reply_markup=markup3)
+		bot.reply_to(message, 'oh my friend {} it was so hard for you,i know'.format(message.from_user.first_name),reply_markup=markup)
 	except:
 		pass
 @bot.message_handler(commands=['begin'])
@@ -86,7 +114,7 @@ def sighup(message):
                 msg = bot.reply_to(message, 'wrong input please input your phone number correctly: \n ex:09xxxxxxxxx',reply_markup=mksighup)
             else:
                 bot.send_message(message.chat.id, " Ok now enter your first name :")
-                sighuplist[message.from_user.username]={'firstname':'','lastname':'','phonenumber':message.text,'questionnumbers':[0],'state':'alive','point':0,'questionnum':0,'timer':time.time(),'chat_id':message.chat.id}
+                sighuplist[message.from_user.username]={'user_id':message.from_user.id,'firstname':'','lastname':'','phonenumber':message.text,'questionnumbers':[0],'state':'alive','point':0,'questionnum':0,'timer':time.time(),'chat_id':message.chat.id}
         except:
             pass
     elif  message.content_type=='text':
@@ -98,24 +126,26 @@ def sighup(message):
             elif message.text=='home':
                 send_welcome(message)
             elif message.text=='Fight on':
-                bot.send_message(message.chat.id, "Alright you have only 15 sec for each question , 20 question and only one chance \n this are your commands\nfor surrendering /end \nfor begining /begin ")
+                bot.send_message(message.chat.id, "Alright you have only 30 sec for each question , 20 question and only one chance \n this are your commands\nfor surrendering /end \nfor begining /begin ")
             if sighuplist[message.from_user.username]['firstname'] =='':
                 sighuplist[message.from_user.username]['firstname']=message.text
                 bot.reply_to(message, "Good {} enter your lastname:".format(message.text))
             elif sighuplist[message.from_user.username]['lastname']=='':
                 sighuplist[message.from_user.username]['lastname']=message.text
+                savedb(message)
                 bot.reply_to(message, "Well done {} {} your signup is complete".format(sighuplist[message.from_user.username]['firstname'],sighuplist[message.from_user.username]['lastname']))
                 bot.send_message(message.chat.id, "Please choose from  this options", reply_markup=markup)
             elif message.from_user.username in sighuplist.keys():
                if  sighuplist[message.from_user.username]['state']=='finish':
                   pass
                elif sighuplist[message.from_user.username]['questionnum'] ==20 or sighuplist[message.from_user.username]['questionnum']>20 :
-                  bot.send_message(message.chat.id,u'\u2302'+'congratulation you have answered to all questions\nand your point is :{}'.format(sighuplist[message.from_user.username]['point']),reply_markup=markup3)
-                  bot.send_message(message.chat.id, u"\u26Fe"+" just take rest and relax", reply_markup=markup)
+                  bot.send_message(message.chat.id,u"\u26Fe"+'congratulation you have answered to all questions\nand your point is :{} \njust take rest and relax'.format(sighuplist[message.from_user.username]['point']),reply_markup=markup)
                   sighuplist[message.from_user.username]['state']='finish'
+                  Updatedb((sighuplist[message.from_user.username]['questionnum'], sighuplist[message.from_user.username]['point'],sighuplist[message.from_user.username]['state'],sighuplist[message.from_user.username]['user_id']))
                else:
                  sighuplist[message.from_user.username]['timer']=time.time()
                  sighuplist[message.from_user.username]['questionnum']+=1
+                 Updatedb((sighuplist[message.from_user.username]['questionnum'], sighuplist[message.from_user.username]['point'],sighuplist[message.from_user.username]['state'],sighuplist[message.from_user.username]['user_id']))
                  if message.text==u"\u2160":
                    check(message,0)
                    getquestion(message)
@@ -147,18 +177,22 @@ def getquestion(message):
 
 def billboard(message):
 	champions,first,second,third=['','',''],0,0,0
-	for i in sighuplist.keys():
-		if sighuplist[i]['point']==first or sighuplist[i]['point']>first:
-			first=sighuplist[i]['point']
-			champions[0]='{} : {}'.format(i,sighuplist[i]['point'])
+	connection.row_factory = sqlite3.Row
+	cur = connection.cursor()
+	cur.execute('SELECT username,point FROM userdetails')
+	result = cur.fetchone()
+	for i in result:
+		if i[1]==first or i[1]>first:
+			first=i[1]
+			champions[0]='{} : {}'.format(i[0],i[1])
 			continue
-		if sighuplist[i]['point']==second or sighuplist[i]['point']>second:
-			second=sighuplist[i]['point']
-			champions[1]='{} : {}'.format(i,sighuplist[i]['point'])
+		if i[1]==second or i[1]>second:
+			second=i[1]
+			champions[1]='{} : {}'.format(i[0],i[1])
 			continue
-		if	sighuplist[i]['point']==third or sighuplist[i]['point']>third:
-			third=sighuplist[i]['point']
-			champions[2]='{} : {}'.format(i,sighuplist[i]['point'])
+		if	i[1]==third or i[1]>third:
+			third=i[1]
+			champions[2]='{} : {}'.format(i[0],i[1])
 			continue
 	return '{}\n{}\n{}'.format(champions[0],champions[1],champions[2])
 
