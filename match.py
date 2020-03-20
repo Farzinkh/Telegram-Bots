@@ -3,6 +3,7 @@ import ast
 import logging
 import os
 import time
+import asyncio
 from flask import Flask, request
 from telebot import types,util
 from random import seed,randint
@@ -166,6 +167,7 @@ def billboard(message):
 				third=sighuplist[i]['point']
 				champions[2]='{} : {}'.format(i,sighuplist[i]['point'])
 				continue
+			await asyncio.sleep(1)	
 		return '{}\n{}\n{}'.format(champions[0],champions[1],champions[2])
 	except ValueError:
 		print("error in billboard")
