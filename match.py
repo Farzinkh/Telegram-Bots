@@ -60,6 +60,7 @@ def beginner(message):
 			bot.reply_to(message, 'sorry you lose your chance !!!')
 		elif sighuplist[message.from_user.username]['state']=='on match':
 			bot.reply_to(message,'you are in match right now!')
+			sighuplist[message.from_user.username]['timer']=time.time()
 			getquestion(message)
 		elif sighuplist[message.from_user.username]['state']=='alive':
 			sighuplist[message.from_user.username]['state']='on match'
@@ -112,7 +113,6 @@ def sighup(message):
                   bot.send_message(message.chat.id,u"\u26Fe"+'congratulation you have answered to all questions\nand your point is :{} \njust take rest and relax'.format(sighuplist[message.from_user.username]['point']),reply_markup=markup)
                   sighuplist[message.from_user.username]['state']='finish'
                else:
-                 sighuplist[message.from_user.username]['timer']=time.time()
                  sighuplist[message.from_user.username]['questionnum']+=1
                  if message.text==u"\u2160":
                    check(message,0)
@@ -126,6 +126,7 @@ def sighup(message):
                  elif message.text==u"\u2163":
                    check(message,3)
                    getquestion(message)
+                 sighuplist[message.from_user.username]['timer']=time.time()
 #        except:
 #            pass
     else:
