@@ -172,6 +172,7 @@ def billboard():
 				champions[2]='{} : {}'.format(i,sighuplist[i]['point'])
 				continue
 		bot.send_message(gMessage,'{}\n{}\n{}'.format(champions[0],champions[1],champions[2]))
+		time.sleep(3)
 	except ValueError:
 		print("error in billboard")
 	else:
