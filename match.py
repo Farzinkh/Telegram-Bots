@@ -9,7 +9,7 @@ from random import seed,randint
 from openpyxl import Workbook
 workbook = Workbook()
 sheet = workbook.active #for working on xlsx file
-telebot.logger.setLevel(logging.DEBUG) #for debugging telegram api
+#telebot.logger.setLevel(logging.DEBUG) #for debugging telegram api
 API_TOKEN = os.getenv("API_TOKEN")#this value will set localy on your host and will obtain from botfather
 WEBHOOK_LISTEN = '0.0.0.0' #default
 server = Flask(__name__)
@@ -97,7 +97,7 @@ def sighup(message):
             elif message.text=='home':
                 send_welcome(message)
             elif message.text=='Fight on':
-                bot.send_message(message.chat.id, "Alright you have only 15 sec for each question , 20 question and only one chance \n this are your commands\nfor surrendering /end \nfor begining /begin ")
+                bot.send_message(message.chat.id, "Alright you have only 30 sec for each question , 20 question and only one chance \n this are your commands\nfor surrendering /end \nfor begining /begin ")
             if sighuplist[message.from_user.username]['firstname'] =='':
                 sighuplist[message.from_user.username]['firstname']=message.text
                 bot.reply_to(message, "Good {} enter your lastname:".format(message.text))
