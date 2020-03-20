@@ -146,7 +146,8 @@ def getquestion(message):
     return None
 
 def billboard(message,champions,first,second,third):
-	for i in sighuplist.keys():
+	for i in sighuplist:
+		print("i is ,",i)
 		if sighuplist[i]['point']==first or sighuplist[i]['point']>first:
 			first=sighuplist[i]['point']
 			champions[0]='{} : {}'.format(i,sighuplist[i]['point'])
@@ -159,6 +160,7 @@ def billboard(message,champions,first,second,third):
 			third=sighuplist[i]['point']
 			champions[2]='{} : {}'.format(i,sighuplist[i]['point'])
 			continue
+	print(champions)
 	return '{}\n{}\n{}'.format(champions[0],champions[1],champions[2])
 
 @bot.message_handler(commands=['help', 'start'])
