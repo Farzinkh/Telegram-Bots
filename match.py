@@ -23,6 +23,7 @@ while count<len(lines):
 	count+=6
 seed(1)
 crossIcon = u"\u274C"
+global first,second,third,champions
 champions,first,second,third=['','',''],0,0,0
 bot = telebot.TeleBot(API_TOKEN,threaded=True,num_threads=10)
 #bot=telebot.AsyncTeleBot(API_TOKEN) #if you want your bot respond asynchronus
@@ -93,7 +94,7 @@ def sighup(message):
             if message.text=='My point':
                 bot.reply_to(message, "your point is :{}".format(sighuplist[message.from_user.username]['point']))
             elif message.text=='billboard':
-                bot.send_message(message.chat.id, billboard(message,champions,first,second,third))
+                bot.send_message(message.chat.id, billboard(message))
             elif message.text=='home':
                 send_welcome(message)
             elif message.text=='flow':
@@ -148,22 +149,21 @@ def getquestion(message):
     sighuplist[message.from_user.username]['questionnumbers'].append(number)
     return None
 
-def billboard(message,champions,first,second,third):
+def billboard(message):
+	global first,second,third,champions
 	try:
 		for i in sighuplist:
 			if sighuplist[i]['point']==first or sighuplist[i]['point']>first:
 				first=sighuplist[i]['point']
 				champions[0]='{} : {}'.format(i,sighuplist[i]['point'])
 				continue
-		for j in sighuplist:
-			if sighuplist[j]['point']==second or sighuplist[j]['point']>second:
-				second=sighuplist[j]['point']
-				champions[1]='{} : {}'.format(j,sighuplist[j]['point'])
+			if sighuplist[i]['point']==second or sighuplist[i]['point']>second:
+				second=sighuplist[i]['point']
+				champions[1]='{} : {}'.format(i,sighuplist[i]['point'])
 				continue
-		for k in sighuplist:
-			if	sighuplist[k]['point']==third or sighuplist[k]['point']>third:
-				third=sighuplist[k]['point']
-				champions[2]='{} : {}'.format(k,sighuplist[k]['point'])
+			if	sighuplist[i]['point']==third or sighuplist[i]['point']>third:
+				third=sighuplist[i]['point']
+				champions[2]='{} : {}'.format(i,sighuplist[i]['point'])
 				continue
 		print(champions)
 	finally:
