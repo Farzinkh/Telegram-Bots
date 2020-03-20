@@ -3,7 +3,7 @@ import ast
 import logging
 import os
 import time
-import asyncio
+import threading
 from flask import Flask, request
 from telebot import types,util
 from random import seed,randint
@@ -24,8 +24,6 @@ while count<len(lines):
 	count+=6
 seed(1)
 crossIcon = u"\u274C"
-global first,second,third,champions
-champions,first,second,third=['','',''],0,0,0
 bot = telebot.TeleBot(API_TOKEN,threaded=True,num_threads=10)
 #bot=telebot.AsyncTeleBot(API_TOKEN) #if you want your bot respond asynchronus
 markup = types.ReplyKeyboardMarkup()
@@ -95,7 +93,8 @@ def sighup(message):
             if message.text=='My point':
                 bot.reply_to(message, "your point is :{}".format(sighuplist[message.from_user.username]['point']))
             elif message.text=='billboard':
-                bot.send_message(message.chat.id, billboard(message))
+                first=threading.Thread(target=billboard)
+                bot.send_message(message.chat.id,first.start())
             elif message.text=='home':
                 send_welcome(message)
             elif message.text=='flow':
@@ -150,8 +149,10 @@ def getquestion(message):
     sighuplist[message.from_user.username]['questionnumbers'].append(number)
     return None
 
-async def billboard(message):
-	global first,second,third,champions
+def billboard():
+	champions,first,second,third=['','',''],0,0,0
+	lock=threading.Lock()
+	lock.acquire()
 	try:
 		for i in sighuplist:
 			print(i,sighuplist[i]['point'])
@@ -167,12 +168,13 @@ async def billboard(message):
 				third=sighuplist[i]['point']
 				champions[2]='{} : {}'.format(i,sighuplist[i]['point'])
 				continue
-		await asyncio.sleep(1)
 		return '{}\n{}\n{}'.format(champions[0],champions[1],champions[2])
 	except ValueError:
 		print("error in billboard")
 	else:
 		pass
+	finally:
+		lock.release()		
 @bot.message_handler(commands=['help', 'start'])
 def send_welcome(message):
 	try:
