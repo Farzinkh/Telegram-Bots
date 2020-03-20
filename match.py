@@ -94,7 +94,7 @@ def sighup(message):
                 bot.reply_to(message, "your point is :{}".format(sighuplist[message.from_user.username]['point']))
             elif message.text=='billboard':
                 global gMessage
-                gMessage=message
+                gMessage=message.chat.id
                 first=threading.Thread(target=billboard)
                 first.start()
             elif message.text=='home':
@@ -171,7 +171,7 @@ def billboard():
 				third=sighuplist[i]['point']
 				champions[2]='{} : {}'.format(i,sighuplist[i]['point'])
 				continue
-		bot.send_message(gMessage.chat.id,'{}\n{}\n{}'.format(champions[0],champions[1],champions[2]))
+		bot.send_message(gMessage,'{}\n{}\n{}'.format(champions[0],champions[1],champions[2]))
 	except ValueError:
 		print("error in billboard")
 	else:
