@@ -9,7 +9,7 @@ from random import seed,randint
 from openpyxl import Workbook
 workbook = Workbook()
 sheet = workbook.active #for working on xlsx file
-#telebot.logger.setLevel(logging.DEBUG) #for debugging telegram api
+telebot.logger.setLevel(logging.DEBUG) #for debugging telegram api
 API_TOKEN = os.getenv("API_TOKEN")#this value will set localy on your host and will obtain from botfather
 WEBHOOK_LISTEN = '0.0.0.0' #default
 server = Flask(__name__)
