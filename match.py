@@ -167,7 +167,9 @@ def billboard(message):
 				champions[2]='{} : {}'.format(i,sighuplist[i]['point'])
 				continue
 		return '{}\n{}\n{}'.format(champions[0],champions[1],champions[2])
-	except:
+	except ValueError:
+		print("error in billboard")
+	else:
 		pass
 @bot.message_handler(commands=['help', 'start'])
 def send_welcome(message):
