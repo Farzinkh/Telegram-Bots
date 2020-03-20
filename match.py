@@ -24,7 +24,7 @@ while count<len(lines):
 	count+=6
 seed(1)
 crossIcon = u"\u274C"
-bot = telebot.TeleBot(API_TOKEN,threaded=True,num_threads=10)
+bot = telebot.TeleBot(API_TOKEN,threaded=True,num_threads=6)
 #bot=telebot.AsyncTeleBot(API_TOKEN) #if you want your bot respond asynchronus
 markup = types.ReplyKeyboardMarkup()
 itembtn1 = types.KeyboardButton('My point')
@@ -172,7 +172,6 @@ def billboard():
 				champions[2]='{} : {}'.format(i,sighuplist[i]['point'])
 				continue
 		bot.send_message(gMessage,'{}\n{}\n{}'.format(champions[0],champions[1],champions[2]))
-		time.sleep(3)
 	except ValueError:
 		print("error in billboard")
 	else:
