@@ -157,7 +157,7 @@ def billboard():
 	lock=threading.Lock()
 	lock.acquire()
 	try:
-		for i in sighuplist:
+		for i in sighuplist.keys():
 			print(i,sighuplist[i]['point'])
 			if sighuplist[i]['point']==first or sighuplist[i]['point']>first:
 				first=sighuplist[i]['point']
