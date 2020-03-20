@@ -7,8 +7,7 @@ from flask import Flask, request
 from telebot import types,util
 from random import seed,randint
 from openpyxl import Workbook
-workbook = Workbook()
-sheet = workbook.active #for working on xlsx file
+
 #telebot.logger.setLevel(logging.DEBUG) #for debugging telegram api
 API_TOKEN = os.getenv("API_TOKEN")#this value will set localy on your host and will obtain from botfather
 WEBHOOK_LISTEN = '0.0.0.0' #default
@@ -91,13 +90,19 @@ def sighup(message):
         except:
             pass
     elif  message.content_type=='text':
-#        try:
             if message.text=='My point':
                 bot.reply_to(message, "your point is :{}".format(sighuplist[message.from_user.username]['point']))
             elif message.text=='billboard':
                 bot.send_message(message.chat.id, billboard(message,champions,first,second,third))
             elif message.text=='home':
                 send_welcome(message)
+            elif message.text=='flow':
+                try:
+                  doc = open('output.xlsx', 'rb')
+                  bot.send_document(message.chat.id, doc)
+                except:
+                  print("it is not possible")
+                  pass
             elif message.text=='Fight on':
                 bot.send_message(message.chat.id, "Alright you have only 30 sec for each question , 20 question and only one chance \n this are your commands\nfor surrendering /end \nfor begining /begin ")
             if sighuplist[message.from_user.username]['firstname'] =='':
@@ -128,8 +133,6 @@ def sighup(message):
                    check(message,3)
                    getquestion(message)
                  sighuplist[message.from_user.username]['timer']=time.time()
-#        except:
-#            pass
     else:
         bot.reply_to(message, "wrong input!!!")
 
@@ -186,12 +189,20 @@ def handle_docs_audio(message):
 
 @bot.message_handler(commands=['alpha'])
 def output(message):
-	print(message.from_user.first_name," is in alpha office")
-	bot.reply_to(message, "Hi mr/mis {} you are in alpha office enter password to receive results".format(message.from_user.first_name),reply_markup=mksighup)
-	for key , value in sighuplist.items():
-		new_row = [key, value['firstname'],value['lastname'],value['phonenumber'],value['point'],value['state']]
-		sheet.append(new_row)
-	workbook.save(filename="output.xlsx")
+	try:
+		workbook = openpyxl.load_workbook('output.xlsx')
+		sheet= workbook.active
+	except:
+		workbook = Workbook()
+		sheet = workbook.active
+		pass
+	finally:
+		print(message.from_user.first_name," is in alpha office")
+		bot.reply_to(message, "Hi mr/mis {} you are in alpha office enter password to receive results".format(message.from_user.first_name),reply_markup=mksighup)
+		for key , value in sighuplist.items():
+			new_row = [key, value['firstname'],value['lastname'],value['phonenumber'],value['point'],value['state']]
+			sheet.append(new_row)
+		workbook.save(filename="output.xlsx")
 
 @server.route('/' + API_TOKEN, methods=['POST'])
 def getMessage():
