@@ -77,11 +77,9 @@ def Updatedb(task):
 
 @bot.message_handler(commands=['end'])
 def surrend(message):
-	try:
 		sighuplist[message.from_user.username]['state']='finish'
 		bot.reply_to(message, 'oh my friend {} it was so hard for you,i know'.format(message.from_user.first_name),reply_markup=markup)
-	except:
-		pass
+
 @bot.message_handler(commands=['begin'])
 def beginner(message):
 	if message.from_user.username in sighuplist.keys():
@@ -106,7 +104,6 @@ def check(message,num):
 
 def sighup(message):
     if message.reply_to_message != None:
-        try:
             if message.text=='flow':
                 doc = open('output.xlsx', 'rb')
                 bot.send_document(message.chat.id, doc)
@@ -115,8 +112,6 @@ def sighup(message):
             else:
                 bot.send_message(message.chat.id, " Ok now enter your first name :")
                 sighuplist[message.from_user.username]={'user_id':message.from_user.id,'firstname':'','lastname':'','phonenumber':message.text,'questionnumbers':[0],'state':'alive','point':0,'questionnum':0,'timer':time.time(),'chat_id':message.chat.id}
-        except:
-            pass
     elif  message.content_type=='text':
 #        try:
             if message.text=='My point':
@@ -198,7 +193,6 @@ def billboard(message):
 
 @bot.message_handler(commands=['help', 'start'])
 def send_welcome(message):
-	try:
 		if message.from_user.username==None:
 			bot.send_message(message.chat.id,"hmmm it seems like that you dont have username account so go to telegram setting and set one to continue!")
 		elif sighuplist.get(message.from_user.username)!=None:
@@ -206,8 +200,6 @@ def send_welcome(message):
 		else:
 			bot.reply_to(message,'hi {} Welcome to home we have examination hear'.format(message.from_user.first_name))
 			bot.reply_to(message, "Enter your phone number:", reply_markup=mksighup)
-	except:
-		pass
 @bot.message_handler(func=sighup)
 def startmatch(message):
 	if sighuplist[message.from_user.username]['firstname'] !='':
