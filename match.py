@@ -153,7 +153,7 @@ def billboard(message):
 	global first,second,third,champions
 	try:
 		for i in sighuplist:
-			print(i)
+			print(i,sighuplist[i]['point'])
 			if sighuplist[i]['point']==first or sighuplist[i]['point']>first:
 				first=sighuplist[i]['point']
 				champions[0]='{} : {}'.format(i,sighuplist[i]['point'])
