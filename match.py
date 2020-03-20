@@ -150,7 +150,7 @@ def getquestion(message):
     sighuplist[message.from_user.username]['questionnumbers'].append(number)
     return None
 
-def billboard(message):
+async def billboard(message):
 	global first,second,third,champions
 	try:
 		for i in sighuplist:
@@ -167,7 +167,7 @@ def billboard(message):
 				third=sighuplist[i]['point']
 				champions[2]='{} : {}'.format(i,sighuplist[i]['point'])
 				continue
-			await asyncio.sleep(1)	
+		await asyncio.sleep(1)
 		return '{}\n{}\n{}'.format(champions[0],champions[1],champions[2])
 	except ValueError:
 		print("error in billboard")
