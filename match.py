@@ -94,6 +94,7 @@ def sighup(message):
                 try:
                 	bot.reply_to(message, "your point is :{}".format(sighuplist[message.from_user.username]['point']))
                 except:
+                   bot.send_message(message.chat.id,text='please signup first \n/start')					
                    pass
             elif message.text=='billboard':
                 global gMessage
@@ -141,7 +142,7 @@ def sighup(message):
                     getquestion(message)
                   sighuplist[message.from_user.username]['timer']=time.time()
             except:
-              print("there is a problem")
+              bot.send_message(message.chat.id,text='please signup first \n/start')
               pass
     else:
         bot.send_message(message.chat.id, "wrong input!!!")
