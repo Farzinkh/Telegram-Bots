@@ -91,7 +91,10 @@ def sighup(message):
             pass
     elif  message.content_type=='text':
             if message.text=='My point':
-                bot.reply_to(message, "your point is :{}".format(sighuplist[message.from_user.username]['point']))
+                try:
+                	bot.reply_to(message, "your point is :{}".format(sighuplist[message.from_user.username]['point']))
+                except:
+                   pass
             elif message.text=='billboard':
                 global gMessage
                 gMessage=message.chat.id
