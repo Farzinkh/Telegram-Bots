@@ -90,12 +90,9 @@ def sighup(message):
         except:
             pass
     elif  message.content_type=='text':
+       try:
             if message.text=='My point':
-                try:
-                	bot.reply_to(message, "your point is :{}".format(sighuplist[message.from_user.username]['point']))
-                except:
-                   bot.send_message(message.chat.id,text='please signup first \n/start')					
-                   pass
+                bot.reply_to(message, "your point is :{}".format(sighuplist[message.from_user.username]['point']))
             elif message.text=='billboard':
                 global gMessage
                 gMessage=message.chat.id
@@ -112,40 +109,39 @@ def sighup(message):
                   pass
             elif message.text=='Fight on':
                 bot.send_message(message.chat.id, "Alright you have only 30 sec for each question , 20 question and only one chance \n this are your commands\nfor surrendering /end \nfor begining /begin ")
-            try:
-                if sighuplist[message.from_user.username]['firstname'] =='':
-                  sighuplist[message.from_user.username]['firstname']=message.text
-                  bot.reply_to(message, "Good {} enter your lastname:".format(message.text))
-                elif sighuplist[message.from_user.username]['lastname']=='':
-                  sighuplist[message.from_user.username]['lastname']=message.text
-                  bot.reply_to(message, "Well done {} {} your signup is complete".format(sighuplist[message.from_user.username]['firstname'],sighuplist[message.from_user.username]['lastname']))
-                  bot.send_message(message.chat.id, "Please choose from  this options", reply_markup=markup)
-                elif message.from_user.username in sighuplist.keys():
-                  if  sighuplist[message.from_user.username]['state']=='finish':
-                    pass
-                  elif sighuplist[message.from_user.username]['questionnum'] ==20 or sighuplist[message.from_user.username]['questionnum']>20 :
-                    bot.send_message(message.chat.id,u"\u26Fe"+'congratulation you have answered to all questions\nand your point is :{} \njust take rest and relax'.format(sighuplist[message.from_user.username]['point']),reply_markup=markup)
-                    sighuplist[message.from_user.username]['state']='finish'
-                  else:
-                    sighuplist[message.from_user.username]['questionnum']+=1
-                  if message.text==u"\u2160":
-                    check(message,0)
-                    getquestion(message)
-                  elif message.text==u"\u2161":
-                    check(message,1)
-                    getquestion(message)
-                  elif message.text==u"\u2162":
-                    check(message,2)
-                    getquestion(message)
-                  elif message.text==u"\u2163":
-                    check(message,3)
-                    getquestion(message)
-                  sighuplist[message.from_user.username]['timer']=time.time()
-            except:
-              bot.send_message(message.chat.id,text='please signup first \n/start')
-              pass
+            if sighuplist[message.from_user.username]['firstname'] =='':
+                sighuplist[message.from_user.username]['firstname']=message.text
+                bot.reply_to(message, "Good {} enter your lastname:".format(message.text))
+            elif sighuplist[message.from_user.username]['lastname']=='':
+                sighuplist[message.from_user.username]['lastname']=message.text
+                bot.reply_to(message, "Well done {} {} your signup is complete".format(sighuplist[message.from_user.username]['firstname'],sighuplist[message.from_user.username]['lastname']))
+                bot.send_message(message.chat.id, "Please choose from  this options", reply_markup=markup)
+            elif message.from_user.username in sighuplist.keys():
+               if  sighuplist[message.from_user.username]['state']=='finish':
+                  pass
+               elif sighuplist[message.from_user.username]['questionnum'] ==20 or sighuplist[message.from_user.username]['questionnum']>20 :
+                  bot.send_message(message.chat.id,u"\u26Fe"+'congratulation you have answered to all questions\nand your point is :{} \njust take rest and relax'.format(sighuplist[message.from_user.username]['point']),reply_markup=markup)
+                  sighuplist[message.from_user.username]['state']='finish'
+               else:
+                 sighuplist[message.from_user.username]['questionnum']+=1
+                 if message.text==u"\u2160":
+                   check(message,0)
+                   getquestion(message)
+                 elif message.text==u"\u2161":
+                   check(message,1)
+                   getquestion(message)
+                 elif message.text==u"\u2162":
+                   check(message,2)
+                   getquestion(message)
+                 elif message.text==u"\u2163":
+                   check(message,3)
+                   getquestion(message)
+                 sighuplist[message.from_user.username]['timer']=time.time()
+       except:
+         bot.send_message(message.chat.id, "Please signup first")
+         pass
     else:
-        bot.send_message(message.chat.id, "wrong input!!!")
+        bot.reply_to(message, "wrong input!!!")
 
 def getquestion(message):
     s=questionlist[sighuplist[message.from_user.username]['questionnumbers'][-1]]
