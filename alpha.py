@@ -30,7 +30,7 @@ for key, value in options.items():
     markup.add(types.InlineKeyboardButton(text=key,
                                           callback_data="['value', '" + value + "', '" + key + "']"))
 mksighup = types.ForceReply(selective=False)
-markup2=types.ReplyKeyboardMarkup()
+markup2=types.ReplyKeyboardMarkup(resize_keyboard=True)
 markup2.row(types.KeyboardButton(u"\u2160"),types.KeyboardButton(u"\u2161"),types.KeyboardButton(u"\u2162"),types.KeyboardButton(u"\u2163"),types.KeyboardButton(u"\u2164"))
 sighuplist={}
 @bot.message_handler(commands=['end'])
