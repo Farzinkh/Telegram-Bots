@@ -72,12 +72,14 @@ def handle_query(call):
                             show_alert=True,
                             text="Your point is:{} ".format(sighuplist[call.message.chat.username]['point']))
         bot.edit_message_text(chat_id=call.message.chat.id,
+                              text="",
                               message_id=call.message.message_id,
                               reply_markup=None,
                               parse_mode='HTML')
     elif  valueFromCallBack=='Fight on':
         bot.send_message(call.message.chat.id, "Alright you have only 45 sec for each question , 15 question and only one chance \n this are your commands\nfor surrendering /end \nfor begining /begin ")
         bot.edit_message_text(chat_id=call.message.chat.id,
+                              text="",
                               message_id=call.message.message_id,
                               reply_markup=None,
                               parse_mode='HTML')
