@@ -25,12 +25,10 @@ crossIcon = u"\u274C"
 bot = telebot.TeleBot(API_TOKEN,threaded=True,num_threads=6)
 #bot=telebot.AsyncTeleBot(API_TOKEN) #if you want your bot respond asynchronus
 options=['My point','Fight on','Home']
-def makeKeyboard(stringList):
-    markup = types.InlineKeyboardMarkup()
-    for key, value in options.items():
-        markup.add(types.InlineKeyboardButton(text=key,
-                                              callback_data="['value', '" + value + "', '" + key + "']"))
-    return markup
+markup = types.InlineKeyboardMarkup()
+for key, value in options.items():
+    markup.add(types.InlineKeyboardButton(text=key,
+                                          callback_data="['value', '" + value + "', '" + key + "']"))
 mksighup = types.ForceReply(selective=False)
 markup2=types.ReplyKeyboardMarkup()
 markup2.add(types.KeyboardButton(u"\u2160"))
