@@ -33,6 +33,7 @@ mksighup = types.ForceReply(selective=False)
 markup2=types.ReplyKeyboardMarkup(resize_keyboard=True)
 markup2.row(types.KeyboardButton(u"\u2160"),types.KeyboardButton(u"\u2161"),types.KeyboardButton(u"\u2162"),types.KeyboardButton(u"\u2163"),types.KeyboardButton(u"\u2164"))
 sighuplist={}
+
 @bot.message_handler(commands=['end'])
 def surrend(message):
 	try:
