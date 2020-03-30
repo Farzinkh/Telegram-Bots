@@ -95,7 +95,6 @@ def sighup(message):
         except:
             pass
     elif  message.content_type=='text':
-       try:
             if message.text=='flow':
                 try:
                   doc = open('output.xlsx', 'rb')
@@ -135,9 +134,6 @@ def sighup(message):
                    check(message,4)
                    getquestion(message)
                  sighuplist[message.from_user.username]['timer']=time.time()
-       except:
-         bot.send_message(message.chat.id, "Please signup first")
-         pass
     else:
         bot.reply_to(message, "wrong input!!!")
 
