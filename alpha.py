@@ -74,7 +74,7 @@ def handle_query(call):
     if valueFromCallBack=='My point':
         bot.answer_callback_query(callback_query_id=call.id,
                             show_alert=True,
-                            text="Your point is: " + sighuplist[call.message.chat.username][point])
+                            text="Your point is: " + sighuplist[call.message.chat.username]['point'])
     elif  valueFromCallBack=='Fight on':
         bot.send_message(call.message.chat.id, "Alright you have only 45 sec for each question , 15 question and only one chance \n this are your commands\nfor surrendering /end \nfor begining /begin ")
     elif valueFromCallBack=='Home':
@@ -155,7 +155,7 @@ def send_welcome(message):
 		elif sighuplist.get(message.chat.username)!=None:
 			bot.send_message(message.chat.id, "Please choose from  this options", reply_markup=markup)
 		else:
-			bot.reply_to(message,'hi {} Welcome to home we have examination hear \n Enter your phone number:'.format(message.from_user.first_name),reply_markup=mksighup)
+			bot.reply_to(message,'hi {} Welcome to home we have examination hear enter your phone number:'.format(message.from_user.first_name),reply_markup=mksighup)
 	except:
 		pass
 @bot.message_handler(func=sighup)
