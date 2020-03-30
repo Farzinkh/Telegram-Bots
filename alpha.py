@@ -24,7 +24,7 @@ seed(1)
 crossIcon = u"\u274C"
 bot = telebot.TeleBot(API_TOKEN,threaded=True,num_threads=6)
 #bot=telebot.AsyncTeleBot(API_TOKEN) #if you want your bot respond asynchronus
-options=['My point','Fight on','Home']
+options={'1':'My point','2':'Fight on','3':'Home'}
 markup = types.InlineKeyboardMarkup()
 for key, value in options.items():
     markup.add(types.InlineKeyboardButton(text=key,
