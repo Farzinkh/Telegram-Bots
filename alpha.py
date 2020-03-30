@@ -24,7 +24,7 @@ seed(1)
 crossIcon = u"\u274C"
 bot = telebot.TeleBot(API_TOKEN,threaded=True,num_threads=6)
 #bot=telebot.AsyncTeleBot(API_TOKEN) #if you want your bot respond asynchronus
-options={'My point':'My point','Fight on':'Fight on','Home':'Home'}
+options={'My point':'My point','Fight on':'Fight on'}
 markup = types.InlineKeyboardMarkup()
 for key, value in options.items():
     markup.add(types.InlineKeyboardButton(text=key,
@@ -78,8 +78,6 @@ def handle_query(call):
                               message_id=call.message.message_id,
                               reply_markup=None,
                               parse_mode='HTML')
-    elif valueFromCallBack=='Home':
-        send_welcome(call.message)
 
 def sighup(message):
     if message.reply_to_message != None:
