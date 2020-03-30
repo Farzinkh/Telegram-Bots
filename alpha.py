@@ -1,4 +1,4 @@
-import logging,ast,telebot
+import logging,ast,telebot,redis
 import threading,docx,time,os
 from flask import Flask, request
 from telebot import types,util
