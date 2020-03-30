@@ -74,7 +74,7 @@ def handle_query(call):
     if valueFromCallBack=='My point':
         bot.answer_callback_query(callback_query_id=call.id,
                             show_alert=True,
-                            text="Your point is: " + sighuplist[call.message.chat.username]['point'])
+                            text="Your point is:{} ".format(sighuplist[call.message.chat.username]['point']))
     elif  valueFromCallBack=='Fight on':
         bot.send_message(call.message.chat.id, "Alright you have only 45 sec for each question , 15 question and only one chance \n this are your commands\nfor surrendering /end \nfor begining /begin ")
     elif valueFromCallBack=='Home':
