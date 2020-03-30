@@ -74,7 +74,7 @@ def handle_query(call):
                             text="Your point is:{} ".format(sighuplist[call.message.chat.username]['point']))
     elif  valueFromCallBack=='Fight on':
         bot.edit_message_text(chat_id=call.message.chat.id,
-                              text="Alright you have only 45 sec for each question , 15 question and only one chance \n this are your commands\nfor surrendering /end \nfor begining /begin ",
+                              text="Alright you have only 45 sec for each question , 15 question and only one chance \nthese are your commands\nfor surrendering /end \nfor begining /begin ",
                               message_id=call.message.message_id,
                               reply_markup=None,
                               parse_mode='HTML')
