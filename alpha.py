@@ -31,11 +31,7 @@ for key, value in options.items():
                                           callback_data="['value', '" + value + "', '" + key + "']"))
 mksighup = types.ForceReply(selective=False)
 markup2=types.ReplyKeyboardMarkup()
-markup2.add(types.KeyboardButton(u"\u2160"))
-markup2.add(types.KeyboardButton(u"\u2161"))
-markup2.add(types.KeyboardButton(u"\u2162"))
-markup2.add(types.KeyboardButton(u"\u2163"))
-markup2.add(types.KeyboardButton(u"\u2164"))
+markup2.row(types.KeyboardButton(u"\u2160"),types.KeyboardButton(u"\u2161"),types.KeyboardButton(u"\u2162"),types.KeyboardButton(u"\u2163"),types.KeyboardButton(u"\u2164"))
 sighuplist={}
 @bot.message_handler(commands=['end'])
 def surrend(message):
@@ -79,6 +75,11 @@ def handle_query(call):
         bot.send_message(call.message.chat.id, "Alright you have only 45 sec for each question , 15 question and only one chance \n this are your commands\nfor surrendering /end \nfor begining /begin ")
     elif valueFromCallBack=='Home':
         send_welcome(call.message)
+    bot.edit_message_text(chat_id=call.message.chat.id,
+                          text="ok now for next question send next command ",
+                          message_id=call.message.message_id,
+                          reply_markup=None,
+                          parse_mode='HTML')
 def sighup(message):
     if message.reply_to_message != None:
         try:
