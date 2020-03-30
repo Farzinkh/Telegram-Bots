@@ -140,7 +140,7 @@ def sighup(message):
 def getquestion(message):
     s=questionlist[sighuplist[message.from_user.username]['questionnumbers'][-1]]
     g=questionsdoc[s]
-    for text in util.split_string('{}\n{}\n{}\n{}\n{}'.format("".join([str(sighuplist[message.from_user.username]['questionnum']),':',s]),"".join([u"\u2160",":",g[0]]),"".join([u"\u2161",":",g[1]]),"".join([u"\u2162",":",g[2]]),"".join([u"\u2163",":",g[3]])), 3000):
+    for text in util.split_string('{}\n{}\n{}\n{}\n{}\n{}'.format("".join([str(sighuplist[message.from_user.username]['questionnum']),':',s]),"".join([u"\u2160",":",g[0]]),"".join([u"\u2161",":",g[1]]),"".join([u"\u2162",":",g[2]]),"".join([u"\u2163",":",g[3]]),"".join([u"\u2164",":",g[4]])), 3000):
         bot.send_message(message.chat.id,text=text,reply_markup=markup2)
     number=randint(0,len(questionlist)-1)
     while number in sighuplist[message.chat.username]['questionnumbers']:
