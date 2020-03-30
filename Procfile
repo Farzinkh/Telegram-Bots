@@ -1,1 +1,1 @@
-web: python match.py
+web: python alpha.py
