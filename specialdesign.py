@@ -1,18 +1,23 @@
-import logging,ast,telebot,redis,os
+import logging,ast,telebot,redis
 import threading,docx,time,json
 from flask import Flask,request
 from telebot import types,util
 from openpyxl import Workbook
 from emoji import emojize
 #telebot.logger.setLevel(logging.DEBUG) #for debugging telegram api
-API_TOKEN = os.getenv("API_TOKEN")#this value will set localy on your host and will obtain from botfather
+API_TOKEN = ""#this value will set localy on your host and will obtain from botfather
 #this value will set localy on your host and will obtain from botfather
-WEBHOOK_LISTEN = '0.0.0.0' #default
+WEBHOOK_HOST = '207.182.136.94'#'<ip/host where the bot is running>'
+WEBHOOK_PORT = 8443  # 443, 80, 88 or 8443 (port need to be 'open')
+WEBHOOK_LISTEN = '0.0.0.0'  # In some VPS you may need to put here the IP addr
+WEBHOOK_URL_BASE = "https://%s:%s" % (WEBHOOK_HOST, WEBHOOK_PORT)
+WEBHOOK_URL_PATH = "/%s/" % (API_TOKEN)
 server = Flask(__name__)
 lines = docx.Document('question.docx')  # Creating word reader object.
 fullText = []
 redis = redis.Redis(host='localhost', port=6379, db=0)
 bot = telebot.TeleBot(API_TOKEN,threaded=True,num_threads=8)
+
 for para in lines.paragraphs:
     fullText.append(para.text)
 count,countans,answerlist,questionsdoc,questionlist=0,6,[],{},[]
@@ -213,14 +218,25 @@ def output(message):
                 pass
         workbook.save(filename="output.xlsx")
 
-@server.route('/' + API_TOKEN, methods=['POST'])
-def getMessage():
-    bot.process_new_updates([telebot.types.Update.de_json(request.stream.read().decode("utf-8"))])
-    return "!", 200
-@server.route("/")
+
+@server.route('/', methods=['GET', 'HEAD'])
+def index():
+    return ''
+@server.route(WEBHOOK_URL_PATH, methods=['POST'])
 def webhook():
-    bot.remove_webhook()
-    bot.set_webhook(url="https://civilmatch.herokuapp.com/{}".format(API_TOKEN)) #this will create by heroku create command
-    return "!", 200
+    if flask.request.headers.get('content-type') == 'application/json':
+        json_string = flask.request.get_data().decode('utf-8')
+        update = telebot.types.Update.de_json(json_string)
+        bot.process_new_updates([update])
+        return ''
+    else:
+        flask.abort(403)
+# Set webhook
+bot.remove_webhook()
+time.sleep(0.2)
+bot.set_webhook(url=WEBHOOK_URL_BASE + WEBHOOK_URL_PATH)
 if __name__ == "__main__":
-    server.run(host=WEBHOOK_LISTEN, port=int(os.environ.get("PORT", "8443")))
+    # Start flask server
+    server.run(host=WEBHOOK_LISTEN,
+            port=WEBHOOK_PORT,
+            debug=True)
