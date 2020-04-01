@@ -1,11 +1,12 @@
-import logging,ast,telebot,redis
+import logging,ast,telebot,redis,os
 import threading,docx,time,json
 from flask import Flask,request
 from telebot import types,util
 from openpyxl import Workbook
 from emoji import emojize
 #telebot.logger.setLevel(logging.DEBUG) #for debugging telegram api
-API_TOKEN = ""#this value will set localy on your host and will obtain from botfather
+API_TOKEN = os.getenv("API_TOKEN")#this value will set localy on your host and will obtain from botfather
+#this value will set localy on your host and will obtain from botfather
 WEBHOOK_LISTEN = '0.0.0.0' #default
 server = Flask(__name__)
 lines = docx.Document('question.docx')  # Creating word reader object.
@@ -222,4 +223,4 @@ def webhook():
     bot.set_webhook(url="https://civilmatch.herokuapp.com/{}".format(API_TOKEN)) #this will create by heroku create command
     return "!", 200
 if __name__ == "__main__":
-    server.run(host=WEBHOOK_LISTEN, port=int("8443"))
+    server.run(host=WEBHOOK_LISTEN, port=int(os.environ.get("PORT", "8443")))
