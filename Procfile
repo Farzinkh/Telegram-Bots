@@ -1,1 +1,1 @@
-web: python alpha.py
+web: python specialdesign.py
